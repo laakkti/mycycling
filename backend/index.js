@@ -32,131 +32,53 @@ const todoSchema = new mongoose.Schema({
   text: { type: String, required: true },
 });
 
-const strava = require("strava-v3");
 
-// nämä turhia sillä nyt tehtdään kuten frontillakin axios...
-strava.config({
-  client_id: "77276",
-  client_secret: "b90fcaa7490fd8d5d3871f66484ae6cd42921c99",
-  redirect_uri: "https://localhost:3000",
-});
+// kokeile täällä kirjoitaa mongoon
+const getActivities= async (access, pageNbr, perPage)=> {
 
-/*strava.config({
-  //access_token: "0e3b0497386a830165863423db339fb300823a2b",
-  client_id: "77276",
-  client_secret: "b90fcaa7490fd8d5d3871f66484ae6cd42921c99",
-  redirect_uri: "https://localhost:3000",
-});*/
+  let allActivities = [];
+  for (let i = 1; i <= pageNbr; i++) {
+    let ret = await axios.get(
+      callActivities + access + "&page=" + i + "&per_page=" + perPage
+    );
+    activities = ret.data;
 
-/*
-//import {Strava}  from "strava";
-const Strava = require("strava"); 
+    // vois olla oma funktionsa
+    let result = activities.map((item) => {
+      return {
+        distance: item.distance,
+        average_speed: item.average_speed,
+        average_heartrate: item.average_heartrate,
+      };
+    });
 
-const strava = new Strava({
-  client_id: '77276',
-  client_secret: 'b90fcaa7490fd8d5d3871f66484ae6cd42921c99',
-  refresh_token: '0e3b0497386a830165863423db339fb300823a2b',
-})*/
+    allActivities = allActivities.concat(result);
+  }
 
-async function getActivities(access) {
-  let x = await axios.get(callActivities + access);
-  console.log(callActivities + access);
-  console.log(x);
-  /*
-    fetch(callActivities + access)
-      .then((res) => res.json())       
-       .then((data) => console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤ "+data.length))
-      //.then((data) => setActivities(data), setIsLoading(!isLoading)) //setIsLoading(prev => !prev))
-      .catch((e) => console.log(e));
-      */
+  return allActivities;
 }
 
-const getStrava = async (token) => {
-  getActivities(token);
-};
-
-const xxxgetStrava = async (token) => {
-  try {
-    strava.activities.listActivities(
-      { access_token: token },
-      function (err, payload) {
-        if (err === null) {
-          res.end(JSON.stringify(payload));
-        } else {
-          console.log("error getting activities", err);
-        }
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-  }
-  /*
-  await strava.athlete.listActivities(access_token: token, 
-  (err, payload, limits) => {
-    console.log(err);
-  }
-  );
-  */
-  /*
-  try {
-    //await strava.athletes.get({id:741808},function(err,payload,limits) {
-    //do something with your payload, track rate limits
-    //});
-
-    //await strava.athlete.listActivities(req.params.stravaId, (err, payload, limits) =>{
-    await strava.athlete.listActivities(741808, (err, payload, limits) => {});
-  } catch (err) {
-    console.error(err.message);
-  }*/
-};
 /*
-  strava.athletes.get({id:77276},(err,payload,limits) =>{
-    console.log("#1 stravaxxxxxxxxxxxxxx "+err);
-    console.log("#2 stravaxxxxxxxxxxxxxx "+payload);
-    console.log("#3 stravaxxxxxxxxxxxxxx "+limits);
-*/
+const getStrava = async (token, pageCnt, perPage) => {
+  return await getActivities(token, pageCnt, perPage);
+};*/
 
-//do something with your payload, track rate limits
-//});
-
-//  const payload = await strava.athlete.get({})
-//   console.log(payload)
-/*
-  const payload = await strava.athlete.listFollowers({
-    page: 1,
-    per_page: 2,
-  });
-  console.log(payload);
-  return true;*/
-//});
-/*
-strava.athletes.get({id:77276},(err,payload,limits) =>{
-    console.log("#1 stravaxxxxxxxxxxxxxx "+err);
-    console.log("#2 stravaxxxxxxxxxxxxxx "+payload);
-    console.log("#3 stravaxxxxxxxxxxxxxx "+limits);
-*/
-
-//do something with your payload, track rate limits
-//});
-
-//}
 
 app.get("/strava", async (request, response) => {
   //console.log(request);
   const token = request.get("token");
-  console.log(token);
+  const pageCnt = request.get("pageCnt");
+  const perPage = request.get("perPage");
+  console.log(token + "  " + pageCnt + "  " + perPage);
 
   try {
-    getStrava(token);
+    //const data = await getStrava(token, pageCnt, perPage);
+    const data = await getActivities(token, pageCnt, perPage);
+    response.json(data);
   } catch (err) {
     console.log(err.message);
   }
 
-  /*const config = {
-      headers: { Authorization: _token }
-    }*/
-  //const data = await getStrava();
-  //response.json(data);
 });
 
 // model
