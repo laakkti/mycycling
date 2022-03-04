@@ -60,12 +60,31 @@ const getActivities = async (access, pageNbr, perPage) => {
   let fields = ["distance", "average_speed", "average_heartrate"];
 
   let allActivities = [];
-  for (let i = 1; i <= pageNbr; i++) {
-    let ret = await axios.get(
-      callActivities + access + "&page=" + i + "&per_page=" + perPage
-    );
-    activities = ret.data;
-
+  let i = 1;
+  //for (let i = 1; i <= pageNbr; i++) {
+  let ret = null;
+  let error = false;
+  while (!error) {
+    try {
+      ret = await axios.get(
+        callActivities + access + "&page=" + i + "&per_page=" + perPage
+      );
+      activities = ret.data;
+      i++;
+    } catch (error) {
+      console.error("*****************************");
+      console.error("error_message: " + error.message);
+      console.error("error_status: " + error.status);
+      //console.error(ret);
+      //console.error("ret_status: "+ret.status);
+      //console.error("*****************************");
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+      error = true;
+    }
     // vois olla oma funktionsa
 
     // "type" : "Ride", pitää huomioida
@@ -125,7 +144,10 @@ const getActivities = async (access, pageNbr, perPage) => {
   }
 
   // poista ja paluata true onnistumisen vuoksi
-  return allActivities;
+  console.log("--------------------------------------");
+  console.log(allActivities.length);
+  console.log("--------------------------------------");
+  return allActivities.length;
 };
 
 /*

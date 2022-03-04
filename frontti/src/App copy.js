@@ -116,57 +116,70 @@ function App() {
     console.log(response.data);
   };
 
-
-  const getYears=async (sub_df)=>{
-
-
-    sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
-    
-    sub_df=sub_df.loc({columns: ["start_date"]}); 
-    let sf = new Series(sub_df["start_date"].values);
-    //console.log("&&&&&&&&&&&&&&&&&&&&& GET YEARS"); 
-    
-    //console.log(sf.unique());
-
-
-/*
-    let sf;
-    try{
-
-    sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();    
-    console.log(sub_df["start_date"].values);
-//    sf = new Series(sub_df["start_date"].values);
-//    console.log("&&&&&&&&&&&&&&&&&&&&&"); 
-    }catch(e) {
-
-    console.log(e.message);
-    }*/
-    return sf.unique();
-  }
-
   const getAll = async (p) => {
-    
+    // piäisi olla kirjautmistoken
+    //const config = {
+      //headers: { token: token }, //,fields:["distance","average_speed","average_heartrate"] }
+    //};
+
+    // tämä tulee useEffectiin
+
+    //let dfx=dataf; //.iloc({rows: [0,1,2]})
+    //console.log(dfx);
+
     let sub_df = df.loc({
       columns: ["distance", "average_speed", "start_date"],
     });
+    //console.log(sub_df)
+    //console.log(sub_df['distance'])
 
+    /*sub_df.loc({ rows: df["start_date"]})
+
+    sub_df=sub_df.iloc({rows: [0]});
+    sub_df=sub_df['start_date'];
+    console.log(sub_df.values[0])*/
     /*
-    sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
-    sub_df=sub_df.loc({columns: ["start_date"]}); 
+    console.log("*********************************");
+    console.log(sub_df["distance"]);
+    console.log("*********************************");
+         */
+    //let ds=toDateTime(sub_df['start_date'])
+
+    //sub_df=sub_df.loc(toDateTime(sub_df['start_date']).dayOfMonth()>14)
+
+    try {
+      //let condition=toDateTime(sub_df["start_date"]).year(); //.unique();
+      sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
+      /*let new_col = [1, 2, 3, 4]
+df.addColumn("D", new_col, { inplace: true });
+
+df.print()
+*/
+    } catch (e) {
+      console.log("error= " + e.message);
+    }
+
+    //sub_df = sub_df.loc({ columns: ["start_date"] });
+
+    //console.log(sub_df.values);
+    //console.log(sub_df["start_date"].values);
+    //console.log("********************************");
+    //console.log(sub_df['start_date'].unique());
+    //sub_df.unique().print();
+    //sub_df.print();
+
+    //let sf = new dataf.Series(sub_df["start_date"])
+    //let sf = new dataf.Series(sub_df)
+
+    //let sf = new Series(data1)
+    //let sf = new Series(sub_df.values);
     let sf = new Series(sub_df["start_date"].values);
-    console.log("&&&&&&&&&&&&&&&&&&&&&"); 
-    
     console.log(sf.unique());
-    */ 
-    let years=await getYears(sub_df);
-
+    sf.unique().print();
     //sf.unique().print()
-    
-    console.log("********************************");
-    console.log(years);
+
     console.log("********************************");
 
-    return;
     let condition = toDateTime(sub_df["start_date"]).year().eq(2021);
     sub_df = sub_df.loc({ rows: condition });
     //console.log(sub_df)
