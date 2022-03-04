@@ -150,21 +150,35 @@ function App() {
       columns: ["distance", "average_speed", "start_date"],
     });
 
-    /*
-    sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
-    sub_df=sub_df.loc({columns: ["start_date"]}); 
-    let sf = new Series(sub_df["start_date"].values);
-    console.log("&&&&&&&&&&&&&&&&&&&&&"); 
-    
-    console.log(sf.unique());
-    */ 
     let years=await getYears(sub_df);
+  
+    console.log("********************************");
+    console.log(years); //.count());
+    //console.log("******************************** "+years[0]);
 
-    //sf.unique().print()
+    (years.values).forEach(( item) => {
+      console.log("********************************")
+      console.log(item)
+    });
     
-    console.log("********************************");
-    console.log(years);
-    console.log("********************************");
+    console.log(years.values);
+    console.log(years.getColumnData());
+    console.log(years.data);
+    //console.log(years[0].);
+
+    /*for(let i=0;i<years.count();i++){
+
+       console.log(years(i)); 
+       //.values());
+    }*/
+    
+    
+
+/*    for(let item in years.data){
+
+        console.log(item.values);
+    }*/
+
 
     return;
     let condition = toDateTime(sub_df["start_date"]).year().eq(2021);
