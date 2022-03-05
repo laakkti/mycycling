@@ -58,17 +58,17 @@ function App() {
   };
 
   const getDataFromMongo = async () => {
-    const config = {
+    const _config = {
       headers: { token: token }, //,fields:["distance","average_speed","average_heartrate"] }
     };
-    const response = await axios.get(baseUrl + "strava/getall", config);
+    const response = await axios.get(baseUrl + "strava/getall", _config);
     /*console.log(response.data.length);
     
     let pvm = response.data[0].start_date;
     console.log(pvm);
     let date = new Date(pvm);
     console.log(date.getFullYear());
-    */      
+    */
     return response.data;
   };
 
@@ -106,6 +106,7 @@ function App() {
 */
 
   // täytyisi selvittää montako page kokonaan sehöän tietty saada kaikki/100 (siis 100 per page)
+  // nuo parametri pageCnt perPage ovat turhia!!!!!
   const callBackendStrava = async () => {
     const config = {
       headers: { token: token, pageCnt: 10, perPage: 1000 }, //,fields:["distance","average_speed","average_heartrate"] }
@@ -116,20 +117,16 @@ function App() {
     console.log(response.data);
   };
 
-
-  const getYears=async (sub_df)=>{
-
-
+  const getYears = async (sub_df) => {
     sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
-    
-    sub_df=sub_df.loc({columns: ["start_date"]}); 
+
+    sub_df = sub_df.loc({ columns: ["start_date"] });
     let sf = new Series(sub_df["start_date"].values);
-    //console.log("&&&&&&&&&&&&&&&&&&&&& GET YEARS"); 
-    
+    //console.log("&&&&&&&&&&&&&&&&&&&&& GET YEARS");
+
     //console.log(sf.unique());
 
-
-/*
+    /*
     let sf;
     try{
 
@@ -141,29 +138,79 @@ function App() {
 
     console.log(e.message);
     }*/
-    return sf.unique();
-  }
+    return sf.unique().values;
+  };
 
   const getAll = async (p) => {
-    
     let sub_df = df.loc({
       columns: ["distance", "average_speed", "start_date"],
     });
 
-    let years=await getYears(sub_df);
-  
-    console.log("********************************");
-    console.log(years); //.count());
+    let years = await getYears(sub_df);
+
+    //console.log("********************************");
+    //console.log(years); //.count());
     //console.log("******************************** "+years[0]);
 
-    (years.values).forEach(( item) => {
-      console.log("********************************")
-      console.log(item)
-    });
+    //console.log(sub_df['distance']);
+    //sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
+    //console.log(sub_df['start_date']);
+    //sub_df = sub_df.loc({ columns: ["start_date"] });
+
+    let condition;
+    let xxx;
+
+    // pitää getYear funktiossa käyttää muita muutuja tyypepjä ettei tarvii uudelleen määritää dataframa
+
+    //years.values.forEach((item) => {
     
+    let val=[];
+    years.forEach((item) => {
+      sub_df = df.loc({
+        columns: ["distance", "average_speed", "start_date"],
+      });
+
+      condition = toDateTime(sub_df["start_date"]).year().eq(item);
+      sub_df = sub_df.loc({ rows: condition });
+      console.log(sub_df);
+      xxx = sub_df["distance"].sum();
+      xxx=Math.round(xxx/1000);
+      val.push(xxx);
+      console.log(item);
+      console.log(xxx);
+    });
+
+
+    // tee funktio
+
+    const gDf = new DataFrame(
+      //{ ride: [20, 18, 489, 675, 1776]},
+      { ride: val},
+      { index: years }
+      //{ index: [1990, 1997, 2003, 2009, 2014] }
+    );
+
+    //console.log("********************************")
+    //console.log(item)
+    //console.log(sub_df["start_date"]);
+
+    //condition = toDateTime(sub_df["start_date"]).year().eq(item);
+    //sub_df = sub_df.loc({ rows: condition });
+
+    // huom vain joulukuu eli index =11
+    /*
+      condition = toDateTime(sub_df["start_date"]).month().eq(11);
+      sub_df = sub_df.loc({ rows: condition });
+      let xxx = sub_df["distance"].sum();
+      console.log(xxx);
+      */
+    //sub_df.print();
+    //});
+
+    /*
     console.log(years.values);
     console.log(years.getColumnData());
-    console.log(years.data);
+    console.log(years.data);*/
     //console.log(years[0].);
 
     /*for(let i=0;i<years.count();i++){
@@ -171,17 +218,14 @@ function App() {
        console.log(years(i)); 
        //.values());
     }*/
-    
-    
 
-/*    for(let item in years.data){
+    /*    for(let item in years.data){
 
         console.log(item.values);
     }*/
 
-
-    return;
-    let condition = toDateTime(sub_df["start_date"]).year().eq(2021);
+    /*
+    condition = toDateTime(sub_df["start_date"]).year().eq(2021);
     sub_df = sub_df.loc({ rows: condition });
     //console.log(sub_df)
 
@@ -195,6 +239,7 @@ function App() {
     let result = new DataFrame({ ride: arr }, { index: [1, 2, 3, 4, 5] });
 
     console.log(xxx);
+    */
 
     /* HUOM */
     /* vois groupata Vuoden mukaan sekä kuukauden ja siten käyttää sum*/
@@ -217,21 +262,28 @@ function App() {
     //console.log(sub_df.start_date);
     //console.log(sub_df.start_date());
     /// tästä oma funktio
+
+    
     const layout = {
       width: 1000,
       plot_bgcolor: "#00BBAA",
       paper_bgcolor: "#00BB55",
       yaxis: {
-        title: "1000 km",
+        title: "km",
       },
       xaxis: {
         title: "Year",
       },
     };
 
-    const _config = {};
+    
+    const config = {
+      //columns: ["gDf.ride"], //columns to plot
+      displayModeBar: false,
+      displaylogo: false
+    }
 
-    result.plot("plot_div").bar({ layout, _config });
+    gDf.plot("plot_div").bar({ layout, config });
 
     //df.plot("plot_div").bar({ layout, _config });
     //sub_df.plot("plot_div").bar({ layout, _config });
