@@ -5,13 +5,16 @@ import axios from "axios";
 import { DataFrame, toDateTime, Series } from "danfojs";
 
 function App() {
-  const [activities, setActivities] = useState({});
+  
+  //const [activities, setActivities] = useState({});
   const [token, setToken] = useState({});
 
   const [df, setDf] = useState();
 
-  const baseUrl = "http://localhost:3000/";
+  const baseUrl = "http://localhost:5000/api/data/";
+  //const baseUrl = "http://localhost:3000/";
 
+  
   //Strava Credentials
   let clientID = "77276";
   let clientSecret = "b90fcaa7490fd8d5d3871f66484ae6cd42921c99";
@@ -58,10 +61,14 @@ function App() {
   };
 
   const getDataFromMongo = async () => {
+    
+    // lienee turha 
     const _config = {
       headers: { token: token }, //,fields:["distance","average_speed","average_heartrate"] }
     };
-    const response = await axios.get(baseUrl + "strava/getall", _config);
+    //
+    const response = await axios.get(baseUrl + "getactivities", _config);
+    //const response = await axios.get(baseUrl + "strava/getall", _config);
     /*console.log(response.data.length);
     
     let pvm = response.data[0].start_date;
@@ -77,6 +84,10 @@ function App() {
     setToken(_token);
 
     let data = await getDataFromMongo();
+
+    console.log("***********************");
+    console.log(data.length);
+    console.log("***********************");
 
     setDf(new DataFrame(data));
 
@@ -94,7 +105,7 @@ function App() {
     //if (isLoading) return <>LOADING</>;
     //if (!isLoading) {
 
-    return activities.length;
+//    return activities.length;
     //}
   }
 
@@ -109,15 +120,31 @@ function App() {
   // nuo parametri pageCnt perPage ovat turhia!!!!!
   const callBackendStrava = async () => {
     const config = {
-      headers: { token: token, pageCnt: 10, perPage: 1000 }, //,fields:["distance","average_speed","average_heartrate"] }
+      headers: { token: token, perPage: 200 }, //,fields:["distance","average_speed","average_heartrate"] }
     };
 
-    const response = await axios.get(baseUrl + "strava", config);
+    const response = await axios.get(baseUrl + "getStravaActivities", config);
     console.log(response.data.length);
     console.log(response.data);
   };
 
+
+  const callBackendGPSStrava = async () => {
+    const config = {
+      headers: { token: token,
+      activity_id:"6907345973"
+      }
+    };
+
+    const response = await axios.get(baseUrl + "getstravagpsdatata", config);
+    console.log(response.data.length);
+    console.log(response.data);
+  };
+
+
+
   const getYears = async (sub_df) => {
+
     sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
 
     sub_df = sub_df.loc({ columns: ["start_date"] });
@@ -135,11 +162,89 @@ function App() {
 //    sf = new Series(sub_df["start_date"].values);
 //    console.log("&&&&&&&&&&&&&&&&&&&&&"); 
     }catch(e) {
-
+      
     console.log(e.message);
     }*/
     return sf.unique().values;
   };
+
+  
+ const getAll2 = async (p) => {
+  let sub_df = df.loc({
+    columns: ["distance", "average_speed", "start_date"],
+  });
+
+  let years = await getYears(sub_df);
+  
+  let condition;
+  let xxx;
+
+  
+  let val=[];
+  years.forEach((item) => {
+    sub_df = df.loc({
+      columns: ["distance", "average_speed", "start_date"],
+    });
+
+    condition = toDateTime(sub_df["start_date"]).year().eq(item);
+    sub_df = sub_df.loc({ rows: condition });
+    console.log(sub_df);
+    xxx = sub_df["distance"].sum();
+    xxx=Math.round(xxx/1000);
+    val.push(xxx);
+    console.log(item);
+    console.log(xxx);
+  });
+
+
+  // tee funktio
+
+  const gDf = new DataFrame(
+
+    { ride: val},
+    { index: years },    
+
+  );
+
+  console.log("***********************");
+  console.log(gDf);
+
+
+  const layout = {
+    title: {
+      text: "",
+      x: 0
+    },
+    legend: {
+      bgcolor: "#fcba03",
+      bordercolor: "#444",
+      borderwidth: 1,
+      font: { family: "Arial", size: 10, color: "#fff" }
+    },
+    width: 1000,
+    yaxis: {
+      title: "km",
+    },
+    xaxis: {
+      title: "Year",
+    },
+  }
+
+  const config = {
+    columns: ["ride"], //columns to plot
+    displayModeBar: false,
+    displaylogo: false,
+  }
+
+console.log("call plot");
+
+  gDf.plot("plot_div").line({ layout, config })
+
+
+  
+};
+
+
 
   const getAll = async (p) => {
     let sub_df = df.loc({
@@ -147,22 +252,10 @@ function App() {
     });
 
     let years = await getYears(sub_df);
-
-    //console.log("********************************");
-    //console.log(years); //.count());
-    //console.log("******************************** "+years[0]);
-
-    //console.log(sub_df['distance']);
-    //sub_df["start_date"] = toDateTime(sub_df["start_date"]).year();
-    //console.log(sub_df['start_date']);
-    //sub_df = sub_df.loc({ columns: ["start_date"] });
-
+    
     let condition;
     let xxx;
 
-    // pitää getYear funktiossa käyttää muita muutuja tyypepjä ettei tarvii uudelleen määritää dataframa
-
-    //years.values.forEach((item) => {
     
     let val=[];
     years.forEach((item) => {
@@ -184,86 +277,10 @@ function App() {
     // tee funktio
 
     const gDf = new DataFrame(
-      //{ ride: [20, 18, 489, 675, 1776]},
       { ride: val},
       { index: years }
-      //{ index: [1990, 1997, 2003, 2009, 2014] }
     );
 
-    //console.log("********************************")
-    //console.log(item)
-    //console.log(sub_df["start_date"]);
-
-    //condition = toDateTime(sub_df["start_date"]).year().eq(item);
-    //sub_df = sub_df.loc({ rows: condition });
-
-    // huom vain joulukuu eli index =11
-    /*
-      condition = toDateTime(sub_df["start_date"]).month().eq(11);
-      sub_df = sub_df.loc({ rows: condition });
-      let xxx = sub_df["distance"].sum();
-      console.log(xxx);
-      */
-    //sub_df.print();
-    //});
-
-    /*
-    console.log(years.values);
-    console.log(years.getColumnData());
-    console.log(years.data);*/
-    //console.log(years[0].);
-
-    /*for(let i=0;i<years.count();i++){
-
-       console.log(years(i)); 
-       //.values());
-    }*/
-
-    /*    for(let item in years.data){
-
-        console.log(item.values);
-    }*/
-
-    /*
-    condition = toDateTime(sub_df["start_date"]).year().eq(2021);
-    sub_df = sub_df.loc({ rows: condition });
-    //console.log(sub_df)
-
-    condition = toDateTime(sub_df["start_date"]).month().eq(11);
-    sub_df = sub_df.loc({ rows: condition });
-    //console.log(sub_df)
-    sub_df.print();
-    let xxx = sub_df["distance"].sum();
-
-    let arr = [4, 25, 281, 600, 1900];
-    let result = new DataFrame({ ride: arr }, { index: [1, 2, 3, 4, 5] });
-
-    console.log(xxx);
-    */
-
-    /* HUOM */
-    /* vois groupata Vuoden mukaan sekä kuukauden ja siten käyttää sum*/
-    // tsekkaa harjoitustyöä python/panda
-
-    /*
-    condition = sub_df["distance"].lt(5000); //   .and(df["distance"].lt(20))
-    sub_df = sub_df.loc({ rows: condition })
-    console.log(sub_df)
-*/
-
-    //sub_df['distancexxx']=sub_df['distance'].values+999
-    /*let condition = sub_df["distance"].lt(5000); //   .and(df["distance"].lt(20))
-    sub_df = sub_df.loc({ rows: condition })
-    console.log(sub_df);*/
-    //console.log(toDateTime(sub_df['start_date']).dayOfMonth())
-    //console.log(sub_df);
-
-    //console.log(sub_df['start_date'].data[0]);
-    //console.log(sub_df.start_date);
-    //console.log(sub_df.start_date());
-    /// tästä oma funktio
-
-    
     const layout = {
       width: 1000,
       plot_bgcolor: "#00BBAA",
@@ -275,18 +292,15 @@ function App() {
         title: "Year",
       },
     };
-
     
     const config = {
-      //columns: ["gDf.ride"], //columns to plot
       displayModeBar: false,
       displaylogo: false
     }
 
     gDf.plot("plot_div").bar({ layout, config });
 
-    //df.plot("plot_div").bar({ layout, _config });
-    //sub_df.plot("plot_div").bar({ layout, _config });
+    
   };
 
   return (
@@ -295,8 +309,16 @@ function App() {
       <button onClick={callBackendStrava} id="button">
         Strava API
       </button>
+      <button onClick={callBackendGPSStrava} id="button">
+        Strava API GPS
+      </button>
+      
       <button onClick={() => getAll("year")} id="xxx">
-        Year
+        Year Bar
+      </button>
+
+      <button onClick={() => getAll2("year")} id="xxx">
+        Year Line
       </button>
       <div id="plot_div"></div>
     </div>
