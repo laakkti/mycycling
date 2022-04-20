@@ -50,9 +50,10 @@ const updateDataToMongo = async (config) => {
       headers: { token: token, perPage: 200 }, //,fields:["distance","average_speed","average_heartrate"] }
     };
     
-    alert("VARMISTA dailogilla varmaan sama kuin delte, että onko varma update")
+    //alert("VARMISTA dialogilla varmaan sama kuin delte, että onko varma update")
     const response = await axios.get(baseUrl + "getstravaactivities", _config);
     //console.log(response.data.length);
+    // åitäis tulostaa datan pituuden
     console.log(response.data);
   //};
 

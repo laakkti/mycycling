@@ -2,6 +2,9 @@ const axios = require("axios");
 const Ride = require("../models/data-model");
 const checkToken = require("../utils/checkToken");
 
+// pois
+//const socketIo = require("socket.io");
+
 const getStravaGPSData = async (request, response) => {
   const token = request.get("token");
   const activity_id = request.get("activity_id");
@@ -190,8 +193,18 @@ const getStravaActivities = async (request, response) => {
 
   try {
     //const data = await getStrava(token, pageCnt, perPage);
-    const data = await getStravaData(token, perPage); //, fields);
-    response.json(data);
+
+
+    const socket=request.app.socket;
+
+    //socket.emit("onProgress", socket.id);
+    socket.emit("onProgress", true);
+
+    setTimeout(() => { socket.emit("onProgress", false); }, 10000);
+    //const data = await getStravaData(token, perPage); //, fields);
+    //response.json(data.length);
+    
+    response.json(0);
   } catch (err) {
     console.log(err.message);
   }
@@ -199,7 +212,22 @@ const getStravaActivities = async (request, response) => {
 
 const getActivities = async (request, response, next) => {
   try {
-    console.log("getActivities");
+    
+    //console.log("getActivitiesxxxx "+app.socket+"xxxxx");
+    /*console.log("############ "+request.app.socket);
+    for(let item in request){
+
+      console.log(item);
+    }*/
+    //console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤ "+request.app.get("socket"));
+    console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤xxx "+request.app.socket.id);
+    //request.app.socket.emit("onProgress", socket.id);
+    const socket=request.app.socket;
+
+    //socket.emit("onProgress", socket.id);
+    socket.emit("connected", "START");
+    
+
     /*
     const value = checkToken.checkToken(request);
     if (!value.status) {
@@ -219,6 +247,7 @@ const getActivities = async (request, response, next) => {
     //const data = await Data.find({ user: user });
     //response.json(data);
   } catch (exception) {
+    console.log("xxxxxx "+exception.message);
     next(exception);
   }
 };

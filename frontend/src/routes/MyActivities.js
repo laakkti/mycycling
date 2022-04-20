@@ -30,15 +30,16 @@ const MyActivities = ({ callBack, user }) => {
 
   //***************************************************************
 
-  useEffect(async () => {
-    // funktio tästä niin on siistimpaa
-    const data = await callBack("getActivitiesData");
-    const df = new DataFrame(data);
-    console.log(df);
-    setYears(await getYears(df));
-    setDf(df);
-    //getAll()
-  }, []);
+  useEffect(() => {
+    const getData = async () => {
+      const data = await callBack("getActivitiesData");
+      const df = new DataFrame(data);
+      console.log(df);
+      setYears(await getYears(df));
+      setDf(df);
+    };
+    getData();
+  }, [callBack]);
 
   const getYears = async (df) => {
     let sub_df = df.loc({
@@ -316,7 +317,7 @@ const MyActivities = ({ callBack, user }) => {
       // id-muuttujassa tulee myös data vois toki olla 2 eri muuttujaa
       let data = id;
       //      alert(data.date.toISOString());
-      
+
       doQuery(data);
     } else if (_mode === 5555) {
       let data = id;
@@ -375,15 +376,14 @@ const MyActivities = ({ callBack, user }) => {
   };
 
   const doQuery = async (data) => {
-      
-    let startDate=data.startDate;
-    let endDate=data.endDate;
-    
-    startDate=new Date(startDate.setUTCHours(0,0,0,0));
-    endDate=new Date(endDate.setUTCHours(23,59,0,0));
-    
-      startDate=startDate.toISOString();
-      endDate=endDate.toISOString();
+    let startDate = data.startDate;
+    let endDate = data.endDate;
+
+    startDate = new Date(startDate.setUTCHours(0, 0, 0, 0));
+    endDate = new Date(endDate.setUTCHours(23, 59, 0, 0));
+
+    startDate = startDate.toISOString();
+    endDate = endDate.toISOString();
 
     let sub_df = df.loc({
       columns: [
@@ -399,7 +399,7 @@ const MyActivities = ({ callBack, user }) => {
     let result = [];
     for (let i = 0; i < sub_df.index.length; i++) {
       let date = sub_df.at(i, "start_date");
-      
+
       if (date >= startDate && date <= endDate) {
         console.log(date);
         let val = sub_df.iloc({ rows: [i] }).toJSON();
@@ -419,7 +419,6 @@ const MyActivities = ({ callBack, user }) => {
 
   return (
     <Container>
-
       <Button
         onClick={() => {
           getMonthChart(2021, "line");

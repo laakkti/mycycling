@@ -114,7 +114,7 @@ const RegisterForm = ({ show, close, func }) => {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="Ammattilainen" onChange={({ target }) => setPro(target.value)} />
+                            <Form.Check type="checkbox" label="Admin" onChange={({ target }) => setPro(target.value)} />
                         </Form.Group>
 
                     </Modal.Body>

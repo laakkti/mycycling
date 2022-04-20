@@ -1,22 +1,22 @@
 import React from 'react';
 import Logo from '../img/logo.svg';
 
-
 const Homepage = () => {
+  // #0000ffff
+  // style={{background:"00ffff"}}
   return (
-    <div>
-
-      <div style={{ paddingLeft: '10px', paddingTop: '10px' }}>
-        <h1>
+    <div > 
+      <div style={{ paddingLeft: '10px', paddingTop: '10px'}}>
+        <div style={{color:"white",fontSize:"30px"}}>
           Pyöräilyaktiviteettien data-analytiikka
-        </h1>
+        </div>
 
-        <h6>
+        <h6 style={{color:"#609CE1"}}>
           2022 ©AA4598
         </h6>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-        <img src={Logo} width='50%' style={{ fill: 'blue' }} alt=''></img>
+        <img src={Logo} width='40%' style={{ marginTop:"50px" }} alt=''></img>
       </div>
 
     </div >
