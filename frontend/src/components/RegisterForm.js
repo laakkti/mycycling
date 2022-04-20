@@ -8,7 +8,7 @@ const RegisterForm = ({ show, close, func }) => {
     const [surName, setSurName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [pro, setPro] = useState(false)
+    const [admin, setAdmin] = useState(false)
 
     const [showToast, setShowToast] = useState(false)
 
@@ -35,7 +35,7 @@ const RegisterForm = ({ show, close, func }) => {
                 "lastname": surName,
                 "email": email,
                 "password": password,
-                "pro": pro
+                "admin": admin
             }
 
             const data = await func(2, regData);
@@ -83,7 +83,7 @@ const RegisterForm = ({ show, close, func }) => {
         setSurName('');
         setEmail('');
         setPassword('');
-        setPro(false);
+        setAdmin(false);
     }
 
     if (show) {
@@ -114,7 +114,8 @@ const RegisterForm = ({ show, close, func }) => {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="Admin" onChange={({ target }) => setPro(target.value)} />
+                            <Form.Check type="checkbox" label="Admin" onChange={( e ) => {                                
+                                setAdmin(e.target.checked)}} />
                         </Form.Group>
 
                     </Modal.Body>

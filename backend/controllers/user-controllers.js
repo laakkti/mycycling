@@ -33,7 +33,7 @@ const login = async (request, response, next) => {
   try {
     response
       .status(200)
-      .send({ token: token, email: user.email, firstname: user.firstname, lastname: user.lastname, pro: user.pro })
+      .send({ token: token, email: user.email, firstname: user.firstname, lastname: user.lastname, admin: user.admin })
   } catch (error) {
 
     console.error(error.message);
@@ -71,7 +71,8 @@ const register = async (request, response, next) => {
     }
 
   } catch (exception) {
-
+    
+    console.log("Error: "+exception.message);
     return response.status(401).json({
       error: 'That email address is already in use'
     })

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Container, Modal, Button, Spinner } from "react-bootstrap";
+import { Container} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import socketIOClient from "socket.io-client";
 
 import userService from "./services/user-service";
 import dataService from "./services/data-service";
 
 import Navigation from "./nav/Navigation";
 import LoginDialog from "./components/LoginDialog";
+import ConfirmModal from "./components/ConfirmModal";
+import OnProgressModal from "./components/OnProgressModal";
 
-import socketIOClient from "socket.io-client";
+
 
 import "./App.css";
 
@@ -20,6 +23,7 @@ const App = () => {
 
   const [user, setUser] = useState("");
   const [userName, setUserName] = useState("");
+  const [admin, setAdmin] = useState(false);
   const [token, setToken] = useState("");
   // toisaalta kun on tokenperusteinen toiminta niin jos token niin  ollaa inessä
   const [login, setLogin] = useState(false);
@@ -91,6 +95,7 @@ const App = () => {
   }, []);
 
   const handleRegister = async (user) => {
+
     const data = await userService.register(user);
 
     return data;
@@ -104,8 +109,10 @@ const App = () => {
         if (response !== null) {
           if (response.code === 200) {
             // oliskos vain data tieto tallessa ja siitä data.email data.token
+            
             setUser(response.data.email);
             setUserName(response.data.firstname);
+            setAdmin(response.data.admin);
             setToken(response.data.token);
           }
           return response;
@@ -140,7 +147,7 @@ const App = () => {
       //alert("xxxxxxxxxxxxxx "+df.length)
       return mongoData;
     } else if (topic === "updateDb") {
-      // MIKSEI OLE dataServicessä
+            
       updateDb();
     } else if (topic === "getSummaryData") {
       const response = await dataService.getSummaryData(data);
@@ -163,8 +170,6 @@ const App = () => {
     } else if (topic === "getMyData") {
       const response = await getMyData(user);
       return response.data;
-    } else if (topic === "modal") {
-      setProgressShow(true);
     }
   };
 
@@ -182,61 +187,7 @@ const App = () => {
     }
   };
 
-  const ConfirmModal = ({ show, onHide, updateDb }) => {
-    // vois olla propseisssa myös funktio
-    const handleAccept = () => {
-      onHide(false);
-      updateDb(true);
-    };
-
-    return (
-      <Modal
-        show={show}
-        onHide={onHide}
-        size="sm"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        backdrop="static"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Update the database
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h5>Are you sure?</h5>
-          <p></p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
-            No
-          </Button>
-
-          <Button variant="primary" onClick={handleAccept}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  };
-
-  const LoadingModal = (props) => {
-    return (
-      <Modal {...props} size="sm" backdrop="static" keyboard={false} centered>
-        <Button variant="primary" disabled>
-          <Spinner
-            as="span"
-            animation="grow"
-            size="sm"
-            role="status"
-            aria-hidden="true"
-          />
-          <span>&nbsp;&nbsp;&nbsp;</span>
-          Loading...
-        </Button>
-      </Modal>
-    );
-  };
+  
 
   // mieti Logindialogin muuttujien nimet uudelleen ja piirrä kuva toiminnasta
   // setLogin on useSatete muuttujan funktio eli säsältäpäin voidaan asettaa näkyvyys
@@ -259,10 +210,10 @@ const App = () => {
           onHide={() => setConfirmShow(false)}
           updateDb={updateDatabase}
         />
-        <LoadingModal show={progressShow}  />
+        <OnProgressModal show={progressShow} message={"Loading..."} />
       </div>
 
-      <Navigation user={userName} callBack={callBack} />
+      <Navigation user={userName} admin={admin} callBack={callBack} />
     </Container>
   );
 };

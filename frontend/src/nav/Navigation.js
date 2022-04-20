@@ -21,7 +21,7 @@ import AmResults from "../routes/AmResults";
 import ProResults from "../routes/ProResults";
 import MyActivities from "../routes/MyActivities";
 
-const Navigation = ({ user, callBack }) => {
+const Navigation = ({ user, admin, callBack }) => {
   const handleSelect = (e) => {
     console.log(e);
   };
@@ -41,27 +41,7 @@ const Navigation = ({ user, callBack }) => {
 
         {user && (
           <>
-            <NavItem className="ml-auto">
-              <Button
-                variant="warning"
-                onClick={() => {
-                  callBack("menu");
-                }}
-              >
-                Analytics
-              </Button>
-            </NavItem>
-
-            <NavItem className="ml-auto">
-              <Button
-                variant="success"
-                onClick={() => {
-                  callBack("modal");
-                }}
-              >
-                Modal
-              </Button>
-            </NavItem>
+            
             <NavItem className="ml-auto">
               <DropdownButton
                 id="dropdown-basic-button"
@@ -74,22 +54,13 @@ const Navigation = ({ user, callBack }) => {
                 <Dropdown.Item href="#/action-3">Range</Dropdown.Item>
               </DropdownButton>
             </NavItem>
-            <LinkContainer to={"/AmResults"} exact>
-              <NavItem>
-                <Button>Harrastajat</Button>
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={"/ProResults"} exact>
-              <NavItem className="mr-auto">
-                <Button>Ammattilaiset</Button>
-              </NavItem>
-            </LinkContainer>
 
             <LinkContainer to={"/MyActivities"} exact>
               <NavItem>
                 <Button>Activities</Button>
               </NavItem>
             </LinkContainer>
+            {admin && (
             <NavItem className="ml-auto">
               <Button
                 variant="info"
@@ -99,7 +70,7 @@ const Navigation = ({ user, callBack }) => {
               >
                 Update Db
               </Button>
-            </NavItem>
+            </NavItem>)}
             <div className="ml-auto" style={{ paddingRight: "15px" }}>
               {"Kirjautunut: " + user}
             </div>
