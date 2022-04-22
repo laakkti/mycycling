@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { DataFrame, toDateTime, Series } from "danfojs";
 import DataForm from "../components/DataForm";
 
-import { Button, Container, Row, Col} from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 
 import { Navbar, NavItem, DropdownButton, Dropdown } from "react-bootstrap";
@@ -58,9 +58,7 @@ const MyActivities = ({ callBack, user }) => {
     return sf.unique().values;
   };
 
-
-  
-  const getAll = () => {};
+  //const getAll = () => {};
 
   //***************************************************************
   /*const getAll = useCallback(async () => {
@@ -95,14 +93,7 @@ const MyActivities = ({ callBack, user }) => {
 
     if (_mode === 0) {
       let data = [];
-      data[0] = {
-        id: null,
-        date: new Date(),
-        type: "Hauis",
-        repeat: 0,
-        weight: 0,
-      };
-
+      
       setMyDataToShow([data]);
       setMode(_mode);
     } else if (_mode === 1) {
@@ -114,7 +105,7 @@ const MyActivities = ({ callBack, user }) => {
         "#79BEA8",
         "#000000"
       );
-      getAll();
+      //getAll();
       //setMode(2);
     } else if (_mode === 3) {
       let data = myData.find((item) => {
@@ -156,7 +147,7 @@ const MyActivities = ({ callBack, user }) => {
             "#79BEA8",
             "#000000"
           );
-          getAll();
+          //getAll();
         }
       } catch (exception) {
         showTheToast(
@@ -181,7 +172,7 @@ const MyActivities = ({ callBack, user }) => {
         "#000000"
       );
 
-      getAll();
+      //getAll();
       //setMode(2);
     }
   };
@@ -218,9 +209,15 @@ const MyActivities = ({ callBack, user }) => {
       if (date >= startDate && date <= endDate) {
         console.log(date);
         let val = sub_df.iloc({ rows: [i] }).toJSON();
+        console.log("----------------------------------");
+        val[0].distance=val[0].distance/1000;
+        val[0].average_speed=(val[0].distance/val[0].moving_time*3600).toFixed(2);
+        //console.log((val[0].distance/val[0].moving_time*3600).toFixed(2));
         result.push(val[0]);
       }
     }
+
+    //df['Average Speed']=round(df['Distance']/df['Moving Time']*3600,2)
 
     setMyDataToShow(result);
     setMode(2);
@@ -229,7 +226,7 @@ const MyActivities = ({ callBack, user }) => {
   let header = ["Start", "End", "Topic"];
   if (mode === 2) {
     // nämää pitäis kai saada jostakin luettua, onko josnin kentät minkä nimisiä
-    header = ["Date", "Duration", "Distance", "Avg speed", "Avg hr"];
+    header = ["Date", "Duration (s)", "Distance (km)", "Avg speed (km/h)", "Avg hr"];
   }
   //{ background: "#091834" }
   return (
@@ -237,65 +234,67 @@ const MyActivities = ({ callBack, user }) => {
       <Navbar style={{ background: "#000000" }} variant="dark">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-        <NavItem className="mr-auto">
+        <NavItem className="ml-auto">
           <Button
             variant="outline-primary"
             onClick={() => {
+              document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(1);
+
+              //alert(xValue);
             }}
           >
             Years
           </Button>
         </NavItem>
-        <NavItem className="mr-auto">
-          <Button variant="primary" onClick={() => {
+        <NavItem className="ml-2">
+          <Button
+            variant="outline-primary"
+            onClick={() => {
+              document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(2);
-            }}>Months</Button>
+            }}
+          >
+            Months
+          </Button>
         </NavItem>
 
-        <NavItem className="ml-auto">
-          <Button variant="outline-success" onClick={() => {
+        <NavItem>
+          <Button className="ml-2"
+            variant="outline-success"
+            onClick={() => {
               handleForm(0, null);
-            }}>Query</Button>
+              setShowMode(3);
+              document.getElementById("plot_div").style.visibility = "hidden";
+            }}
+          >
+            Query
+          </Button>
         </NavItem>
       </Navbar>
-      
+
       <Row>
         <Col>
           <h2> </h2>
         </Col>
-        
-        {/*{mode === 2 && (*/}
-        {/*
-        <Col>
-          <Button
-            className="float-right mt-1 btn btn-primary btn-sm>"
-            onClick={() => {
-              handleForm(0, null);
-            }}
-          >
-            <PlusCircleFill width="20" height="20"></PlusCircleFill>
-          </Button>
-          </Col>*/}
-        {/*})}*/}
+
       </Row>
 
-      {showMode === 1 && 
-        <YearsGraph df={df} years={years} />
-      }
-      {showMode === 2 && 
-      <MonthsGraph df={df} years={years} />
-      }
-      
-      <div id="plot_div" className="float-left"/>
-      
-      <DataForm
-        mode={mode}
-        data={myDataToShow}
-        header={header}
-        func={handleForm}
-      />
+      {showMode === 1 && <YearsGraph df={df} years={years} />}
+      {showMode === 2 && <MonthsGraph df={df} years={years} />}
 
+      {/*{showMode !== 3 && */}
+          
+      {showMode === 3 && (
+        <DataForm
+          mode={mode}
+          data={myDataToShow}
+          header={header}
+          func={handleForm}
+        />
+      )}
+
+      <div id="plot_div" />
       <ToastMsg
         show={showToast}
         close={() => {

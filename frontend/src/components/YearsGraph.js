@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { DataFrame, toDateTime, Series } from "danfojs";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { DataFrame, toDateTime } from "danfojs";
 
 const YearsGraph = ({ df, years }) => {
   const [mode, setMode] = useState("bar");
@@ -22,8 +20,6 @@ const YearsGraph = ({ df, years }) => {
     tmp = Math.round(tmp / 1000);
     val.push(tmp);
   });
-
-  // tee funktio
 
   const gDf = new DataFrame({ ride: val }, { index: years });
   let layout;
@@ -77,17 +73,13 @@ const YearsGraph = ({ df, years }) => {
 
     gDf.plot("plot_div").line({ layout, config });
   }
-  /*
-
-
-*/
 
   const modes = ["bar", "line"];
-  // className="float-right mt-1 btn btn-primary btn-sm>">
+
   return (
     <div>
-      <Button className="float-right">Heippa</Button>
-      <Form.Select style={{background: "cyan" }}
+      <select
+        style={{ background: "cyan" }}
         value={mode}
         onChange={({ target }) => {
           setMode(target.value);
@@ -100,7 +92,7 @@ const YearsGraph = ({ df, years }) => {
             </option>
           );
         })}
-      </Form.Select>
+      </select>
     </div>
   );
 };

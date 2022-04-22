@@ -1,21 +1,11 @@
-import React, { useState,useEffect } from "react";
-import { DataFrame, toDateTime, Series } from "danfojs";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState} from "react";
+import { DataFrame, toDateTime} from "danfojs";
 
 const MonthsGraph = ({ df, years}) => {
   
     
   const [mode, setMode] = useState("bar");
   const [year, setYear] = useState(years[0]);
-  //const [df, setDf] = useState(_df);
-
-  /*
-  useEffect(() => {
-    
-    setDf(df);
-  }, []);
-*/
   
   let sub_df = df.loc({
     columns: ["distance", "start_date"],
@@ -27,11 +17,7 @@ const MonthsGraph = ({ df, years}) => {
   sub_df = sub_df.loc({ rows: condition });
 
   
- 
-
-
   let val = [];
-
 
   for (let month = 0; month < 12; month++) {
     condition = toDateTime(sub_df["start_date"]).month().eq(month);
@@ -43,7 +29,6 @@ const MonthsGraph = ({ df, years}) => {
     val.push(sum);
   }
 
-  //*********************************************
   if (mode === "line") {
     const start = 1;
     const end = 12;
@@ -107,8 +92,8 @@ const MonthsGraph = ({ df, years}) => {
 
   return (
     <div>
-      
-      <Form.Select
+       
+      <select
         style={{ background: "cyan" }}
         value={mode}
         onChange={({ target }) => {
@@ -122,8 +107,8 @@ const MonthsGraph = ({ df, years}) => {
             </option>
           );
         })}
-      </Form.Select>
-      <Form.Select
+      </select>
+      <select
         style={{ background: "cyan" }}
         value={year}
         onChange={({ target }) => {
@@ -137,7 +122,7 @@ const MonthsGraph = ({ df, years}) => {
             </option>
           );
         })}
-      </Form.Select>
+      </select>      
     </div>
   );
 };
