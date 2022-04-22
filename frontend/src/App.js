@@ -156,7 +156,7 @@ const App = () => {
 
   const callBack = async (topic, data) => {
     if (topic === "getActivitiesData") {
-      //alert("xxxxxxxxxxxxxx "+df.length)
+      
       return mongoData;
     } else if (topic === "updateDb") {
             

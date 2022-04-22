@@ -58,20 +58,7 @@ const MyActivities = ({ callBack, user }) => {
     return sf.unique().values;
   };
 
-  //const getAll = () => {};
-
-  //***************************************************************
-  /*const getAll = useCallback(async () => {
-
-    const data = await callBack("getMyData");
-
-    setMyData(data);
-    setMyDataToShow(data);
-    setMode(2);
-
-
-  }, [callBack]);*/
-
+  
   const showTheToast = (header, message, delay, backgroundcolor, color) => {
     setMessage({
       header: header,
@@ -260,7 +247,7 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
 
         <NavItem>
-          <Button className="ml-2"
+          <Button className="ml -2"
             variant="outline-success"
             onClick={() => {
               handleForm(0, null);

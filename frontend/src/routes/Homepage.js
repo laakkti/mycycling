@@ -1,15 +1,7 @@
 import React from "react";
 import Logo from "../img/logo.svg";
 
-import { useNavigate } from "react-router-dom";
-
 const Homepage = () => {
-  let navigate = useNavigate();
-
-  const onClick = (event) => {
-    console.log("navigate")
-    navigate("/MyActivities");
-  };
 
   return (
     <div>
@@ -29,7 +21,7 @@ const Homepage = () => {
       >
         <img src={Logo} width="40%" style={{ marginTop: "50px" }} alt=""></img>
       </div>
-      <button onClick={(e) => onClick(e)}>Kirjaudu</button>
+      
     </div>
   );
 };
