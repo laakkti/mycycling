@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Container} from "react-bootstrap";
+import { Container,Button} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import socketIOClient from "socket.io-client";
+
+import { useNavigate }  from "react-router-dom";
+// pois*******************
+//import { useHistory} from "react-router-dom";
+//import { Redirect } from 'react-router-dom';
+//************************
 
 import userService from "./services/user-service";
 import dataService from "./services/data-service";
@@ -31,6 +37,8 @@ const App = () => {
   const [confirmShow, setConfirmShow] = useState(false);
   //const [confirm, setConfirm] = useState(false);
 
+  //const history = useHistory();
+  let navigate = useNavigate();
   // seuraava data-serviceen!!!!
   // tähän ehto onko dev vai... ON SERVICESSA
   //const baseUrl = "http://localhost:5000/api/data/";
@@ -114,6 +122,10 @@ const App = () => {
             setUserName(response.data.firstname);
             setAdmin(response.data.admin);
             setToken(response.data.token);
+            navigate("/MyActivities");
+            
+            //let history = useHistory();
+            //history.push("/home")
           }
           return response;
         } else {
@@ -195,9 +207,31 @@ const App = () => {
   // container fluid tsekkaa eri routejen asetukset container vai container fluid vai ei mitään
   const style = { backgroundColor: "#353b45" };
 
+  const redirect=()=>{
+
+    
+      //history.push("/");
+    //return <Redirect to='/MyActivities'/>
+    //let navigate = useNavigate();
+    //navigate("/MyActivities");
+    //alert("HEippa");
+    /*
+  useEffect(() => {
+    if (user) {
+      let history = useHistory();
+      history.push("/MyActivities");
+    }
+  }, [user]);
+  */
+
+
+  
+  }
+
   return (
     <Container fluid className="App">
       <div style={style}>
+  
         <LoginDialog
           _show={login}
           showDialog={setLogin}

@@ -1,22 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { DataFrame, toDateTime, Series } from "danfojs";
 import DataForm from "../components/DataForm";
-import { Button, Container, Row, Col } from "react-bootstrap";
+
+import { Button, Container, Row, Col} from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 
+import { Navbar, NavItem, DropdownButton, Dropdown } from "react-bootstrap";
+import { HouseDoor } from "react-bootstrap-icons";
+
 import ToastMsg from "../components/ToastMsg";
+import YearsGraph from "../components/YearsGraph";
 
 const MyActivities = ({ callBack, user }) => {
   const [df, setDf] = useState();
   const [years, setYears] = useState();
 
-  // tämä malli henkilötietojen muokkaamiseen!!!
-  const [mode, setMode] = useState(2); // oletus että kaikki nöytetään
+  const [mode, setMode] = useState(2); // oletus että kaikki näytetään
   const [myData, setMyData] = useState([]);
   const [myDataToShow, setMyDataToShow] = useState([]);
 
-  const [showToast, setShowToast] = useState(false);
+  const [showMode, setShowMode] = useState(0); // oletus että kaikki näytetään
 
+  const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState({
     header: "",
     message: "",
@@ -50,6 +55,58 @@ const MyActivities = ({ callBack, user }) => {
     sub_df = sub_df.loc({ columns: ["start_date"] });
     let sf = new Series(sub_df["start_date"].values);
     return sf.unique().values;
+  };
+
+  const YearsGraphxx = () => {
+    let condition;
+    let tmp;
+
+    let val = [];
+
+    years.forEach((item) => {
+      let sub_df = df.loc({
+        columns: ["distance", "start_date"],
+      });
+
+      condition = toDateTime(sub_df["start_date"]).year().eq(item);
+      sub_df = sub_df.loc({ rows: condition });
+
+      tmp = sub_df["distance"].sum();
+      tmp = Math.round(tmp / 1000);
+      val.push(tmp);
+    });
+
+    // tee funktio
+
+    const gDf = new DataFrame({ ride: val }, { index: years });
+
+    const layout = {
+      width: 1000,
+      plot_bgcolor: "#00BBAA",
+      paper_bgcolor: "#00BB55",
+      yaxis: {
+        title: "km",
+      },
+      xaxis: {
+        title: "Year",
+      },
+    };
+
+    const config = {
+      displayModeBar: false,
+      displaylogo: false,
+    };
+
+    gDf.plot("plot_div").bar({ layout, config });
+
+    return (
+      <>
+        <Button className="float-right mt-1 btn btn-primary btn-sm>">
+          Heippa
+        </Button>
+        <div id="plot_divx"></div>
+      </>
+    );
   };
 
   const showAll = async (p) => {
@@ -416,9 +473,31 @@ const MyActivities = ({ callBack, user }) => {
     // nämää pitäis kai saada jostakin luettua, onko josnin kentät minkä nimisiä
     header = ["Date", "Duration", "Distance", "Avg speed", "Avg hr"];
   }
-
+  //{ background: "#091834" }
   return (
     <Container>
+      <Navbar style={{ background: "#000000" }} variant="dark">
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+        <NavItem className="mr-auto">
+          <Button
+            variant="outline-primary"
+            onClick={() => {
+              setShowMode(1);
+            }}
+          >
+            Years
+          </Button>
+        </NavItem>
+        <NavItem className="mr-auto">
+          <Button variant="primary">Months</Button>
+        </NavItem>
+
+        <NavItem className="ml-auto">
+          <Button variant="outline-success">Query</Button>
+        </NavItem>
+      </Navbar>
+
       <Button
         onClick={() => {
           getMonthChart(2021, "line");
@@ -448,11 +527,12 @@ const MyActivities = ({ callBack, user }) => {
       >
         Show linechart
       </Button>
-      <div id="plot_div"></div>
+      
       <Row>
         <Col>
-          <h2>Omat suoritukset</h2>
+          <h2> </h2>
         </Col>
+        
         {/*{mode === 2 && (*/}
         <Col>
           <Button
@@ -467,6 +547,15 @@ const MyActivities = ({ callBack, user }) => {
         {/*})}*/}
       </Row>
 
+
+
+      {showMode === 1 && 
+        <YearsGraph df={df} years={years} />
+        }
+      
+      
+      <div id="plot_div" className="float-left"/>
+      
       <DataForm
         mode={mode}
         data={myDataToShow}

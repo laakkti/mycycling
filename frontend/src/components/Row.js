@@ -18,25 +18,9 @@ const Row = ({ mode, item, func }) => {
   
   useEffect(() => {
 
-    /*
-    if (mode !== 0) {
-      setId(item._id);
-      setDate(new Date(item.date));
-      setType(item.type);
-      setRepeat(item.repeat);
-      setWeight(item.weight);
-    } else {
+    
 
-
-      setId(null);
-      setDate(new Date());
-      setType(typeOptions[0]);
-      setRepeat('');
-      setWeight('');
-
-    }*/
-
-  }, [mode, item._id, item.date, item.type, item.repeat, item.weight, typeOptions]);
+  }, []);
 
 
   const handleRow = (mode, id) => {

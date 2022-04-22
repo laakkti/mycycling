@@ -1,9 +1,11 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
+//import React from "react";
+import React, { useState, useEffect } from "react";
+import {  
+  Route,  
+  Navigate,
+  Link,
+  Routes,
+  useLocation
 } from "react-router-dom";
 import {
   Navbar,
@@ -13,12 +15,9 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { LinkContainer } from "react-router-bootstrap";
 import { HouseDoor } from "react-bootstrap-icons";
 
 import Homepage from "../routes/Homepage";
-import AmResults from "../routes/AmResults";
-import ProResults from "../routes/ProResults";
 import MyActivities from "../routes/MyActivities";
 
 const Navigation = ({ user, admin, callBack }) => {
@@ -26,55 +25,60 @@ const Navigation = ({ user, admin, callBack }) => {
     console.log(e);
   };
 
+  let location = useLocation();
+
+    // useLocation Hook:n avulla päästään käsiksi location-olioon
+    console.log("HOME l:", location.pathname);
+    
+    let path=location.pathname;
+
+    if(path==="/"){
+      
+    }else{
+
+
+    }
+    
+
   return (
-    <Router>
+    <>
       <Navbar style={{ background: "#091834" }} variant="light">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
-        <LinkContainer to={"/"} exact>
-          <NavItem className="mr-auto">
+        <Link to="/" className="mr-auto">
+          <NavItem>
             <Button variant="success">
               <HouseDoor color="white" size={22} />
             </Button>
           </NavItem>
-        </LinkContainer>
-
+        </Link>
         {user && (
           <>
-            
-            <NavItem className="ml-auto">
-              <DropdownButton
-                id="dropdown-basic-button"
-                variant="warning"
-                title="Analytics"
-                onSelect={handleSelect}
-              >
-                <Dropdown.Item href="#/action-1">Year</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">12 months</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Range</Dropdown.Item>
-              </DropdownButton>
-            </NavItem>
-
-            <LinkContainer to={"/MyActivities"} exact>
+          
+          {(path==="/") && (
+            <Link to="/MyActivities" className="ml-auto">
               <NavItem>
-                <Button>Activities</Button>
+                <Button variant="outline-warning">Activities</Button>
               </NavItem>
-            </LinkContainer>
+            </Link>
+          )}
+
             {admin && (
-            <NavItem className="ml-auto">
-              <Button
-                variant="info"
-                onClick={() => {
-                  callBack("updateDb");
-                }}
-              >
-                Update Db
-              </Button>
-            </NavItem>)}
-            <div className="ml-auto" style={{ paddingRight: "15px" }}>
+              <NavItem className="ml-auto">
+                <Button
+                  variant="outline-info"
+                  onClick={() => {
+                    callBack("updateDb");
+                  }}
+                >
+                  Update Db
+                </Button>
+              </NavItem>
+            )}
+        
+            <div className="ml-auto" style={{ paddingRight: "15px",color: "darkmagenta" }}>
               {"Kirjautunut: " + user}
             </div>
-            <LinkContainer to={"/"} exact>
+            <Link to={"/"} >
               <NavItem>
                 <Button
                   variant="dark"
@@ -85,48 +89,42 @@ const Navigation = ({ user, admin, callBack }) => {
                   Kirjaudu ulos
                 </Button>
               </NavItem>
-            </LinkContainer>
-          </>
-        )}
-
-        {!user && (
-          <NavItem className="ml-auto">
-            <Button
-              variant="info"
-              onClick={() => {
-                callBack("login");
-              }}
-            >
-              Kirjaudu
-            </Button>
-          </NavItem>
-        )}
+            </Link>
+            </>
+            )}
+            
+            {!user && (
+              <NavItem className="ml-auto">
+                <Button
+                  variant="info"
+                  onClick={() => {
+                    callBack("login");
+                  }}
+                >
+                  Kirjaudu
+                </Button>
+              </NavItem>
+            )}
+          
+        
       </Navbar>
 
-      <Switch>
-        <Route path="/AmResults">
-          <AmResults callBack={callBack} />
-        </Route>
-        <Route path="/ProResults">
-          {user ? (
-            <ProResults callBack={callBack} user={user} />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/MyActivities">
-          {user ? (
-            <MyActivities callBack={callBack} user={user} />
-          ) : (
-            <Redirect to="/" />
-          )}
-        </Route>
-        <Route path="/">
-          <Homepage />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
-    </Router>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+
+        <Route
+          path="/MyActivities"
+          element={
+            user ? (
+              <MyActivities callBack={callBack} user={user} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 };
 export default Navigation;
