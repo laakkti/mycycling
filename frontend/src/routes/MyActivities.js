@@ -10,6 +10,7 @@ import { HouseDoor } from "react-bootstrap-icons";
 
 import ToastMsg from "../components/ToastMsg";
 import YearsGraph from "../components/YearsGraph";
+import MonthsGraph from "../components/MonthsGraph";
 
 const MyActivities = ({ callBack, user }) => {
   const [df, setDf] = useState();
@@ -57,251 +58,8 @@ const MyActivities = ({ callBack, user }) => {
     return sf.unique().values;
   };
 
-  const YearsGraphxx = () => {
-    let condition;
-    let tmp;
 
-    let val = [];
-
-    years.forEach((item) => {
-      let sub_df = df.loc({
-        columns: ["distance", "start_date"],
-      });
-
-      condition = toDateTime(sub_df["start_date"]).year().eq(item);
-      sub_df = sub_df.loc({ rows: condition });
-
-      tmp = sub_df["distance"].sum();
-      tmp = Math.round(tmp / 1000);
-      val.push(tmp);
-    });
-
-    // tee funktio
-
-    const gDf = new DataFrame({ ride: val }, { index: years });
-
-    const layout = {
-      width: 1000,
-      plot_bgcolor: "#00BBAA",
-      paper_bgcolor: "#00BB55",
-      yaxis: {
-        title: "km",
-      },
-      xaxis: {
-        title: "Year",
-      },
-    };
-
-    const config = {
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").bar({ layout, config });
-
-    return (
-      <>
-        <Button className="float-right mt-1 btn btn-primary btn-sm>">
-          Heippa
-        </Button>
-        <div id="plot_divx"></div>
-      </>
-    );
-  };
-
-  const showAll = async (p) => {
-    /*let sub_df = df.loc({
-      columns: ["distance", "average_speed", "start_date"],
-    });*/
-
-    //let years = await getYears(df);
-
-    let condition;
-    let xxx;
-
-    let val = [];
-
-    years.forEach((item) => {
-      let sub_df = df.loc({
-        columns: ["distance", "start_date"],
-      });
-
-      condition = toDateTime(sub_df["start_date"]).year().eq(item);
-      sub_df = sub_df.loc({ rows: condition });
-
-      xxx = sub_df["distance"].sum();
-      xxx = Math.round(xxx / 1000);
-      val.push(xxx);
-      console.log(item);
-      console.log(xxx);
-    });
-
-    // tee funktio
-
-    const gDf = new DataFrame({ ride: val }, { index: years });
-
-    const layout = {
-      width: 1000,
-      plot_bgcolor: "#00BBAA",
-      paper_bgcolor: "#00BB55",
-      yaxis: {
-        title: "km",
-      },
-      xaxis: {
-        title: "Year",
-      },
-    };
-
-    const config = {
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").bar({ layout, config });
-  };
-
-  //columns ei tarvoita kuin yksi haluttu, VOIS OLALA column parametrina sekä bar tai line
-  const showAll2 = async (p) => {
-    //let years = await getYears(df);
-
-    let condition;
-    let xxx;
-
-    let val = [];
-    years.forEach((item) => {
-      let sub_df = df.loc({
-        columns: ["distance", "start_date"],
-      });
-
-      condition = toDateTime(sub_df["start_date"]).year().eq(item);
-      sub_df = sub_df.loc({ rows: condition });
-      xxx = sub_df["distance"].sum();
-      xxx = Math.round(xxx / 1000);
-      val.push(xxx);
-    });
-
-    // tee funktio
-
-    const gDf = new DataFrame({ ride: val }, { index: years });
-
-    const layout = {
-      title: {
-        text: "",
-        x: 0,
-      },
-      legend: {
-        bgcolor: "#fcba03",
-        bordercolor: "#444",
-        borderwidth: 1,
-        font: { family: "Arial", size: 10, color: "#fff" },
-      },
-      width: 1000,
-      yaxis: {
-        title: "km",
-      },
-      xaxis: {
-        title: "Year",
-      },
-    };
-
-    const config = {
-      columns: ["ride"], //columns to plot
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").line({ layout, config });
-  };
-
-  const getMonthChart = (year, mode) => {
-    let sub_df = df.loc({
-      columns: ["distance", "start_date"],
-    });
-
-    console.log("****************************************");
-    console.log(sub_df["start_date"]);
-    console.log(toDateTime(sub_df["start_date"]));
-    console.log("****************************************");
-
-    let km = [];
-
-    let condition = toDateTime(sub_df["start_date"]).year().eq(year);
-    sub_df = sub_df.loc({ rows: condition });
-
-    let val = [];
-
-    for (let month = 0; month < 12; month++) {
-      condition = toDateTime(sub_df["start_date"]).month().eq(month);
-      let sub_dfx = sub_df.loc({ rows: condition });
-      //console.log(sub_dfx);
-      let sum = sub_dfx["distance"].sum();
-      sum = Math.round(sum / 1000);
-      val.push(sum);
-    }
-
-    //*********************************************
-    if (mode === "line") {
-      const start = 1;
-      const end = 12;
-      const months = [...Array(end - start + 1).keys()].map((x) => x + start);
-      const gDf = new DataFrame({ ride: val }, { index: months });
-
-      const layout = {
-        title: {
-          text: "",
-          x: 0,
-        },
-        legend: {
-          bgcolor: "#fcba03",
-          bordercolor: "#444",
-          borderwidth: 1,
-          font: { family: "Arial", size: 10, color: "#fff" },
-        },
-        width: 1000,
-        yaxis: {
-          title: "km",
-        },
-        xaxis: {
-          title: "Month",
-        },
-      };
-
-      const config = {
-        columns: ["ride"], //columns to plot
-        displayModeBar: false,
-        displaylogo: false,
-      };
-
-      gDf.plot("plot_div").line({ layout, config });
-      //*********************************************
-    } else {
-      const start = 1;
-      const end = 12;
-      const months = [...Array(end - start + 1).keys()].map((x) => x + start);
-      const gDf = new DataFrame({ ride: val }, { index: months });
-
-      const layout = {
-        width: 1000,
-        plot_bgcolor: "#00BBAA",
-        paper_bgcolor: "#00BB55",
-        yaxis: {
-          title: "km",
-        },
-        xaxis: {
-          title: "Month",
-        },
-      };
-
-      const config = {
-        displayModeBar: false,
-        displaylogo: false,
-      };
-
-      gDf.plot("plot_div").bar({ layout, config });
-    }
-    //*************************************************** */
-  };
-
+  
   const getAll = () => {};
 
   //***************************************************************
@@ -490,43 +248,15 @@ const MyActivities = ({ callBack, user }) => {
           </Button>
         </NavItem>
         <NavItem className="mr-auto">
-          <Button variant="primary">Months</Button>
+          <Button variant="primary" onClick={() => {
+              setShowMode(2);
+            }}>Months</Button>
         </NavItem>
 
         <NavItem className="ml-auto">
           <Button variant="outline-success">Query</Button>
         </NavItem>
       </Navbar>
-
-      <Button
-        onClick={() => {
-          getMonthChart(2021, "line");
-        }}
-      >
-        Month line
-      </Button>
-
-      <Button
-        onClick={() => {
-          getMonthChart(2021, "bar");
-        }}
-      >
-        Month bar
-      </Button>
-      <Button
-        onClick={() => {
-          showAll();
-        }}
-      >
-        Show bar
-      </Button>
-      <Button
-        onClick={() => {
-          showAll2();
-        }}
-      >
-        Show linechart
-      </Button>
       
       <Row>
         <Col>
@@ -551,8 +281,10 @@ const MyActivities = ({ callBack, user }) => {
 
       {showMode === 1 && 
         <YearsGraph df={df} years={years} />
-        }
-      
+      }
+      {showMode === 2 && 
+      <MonthsGraph df={df} years={years} />
+      }
       
       <div id="plot_div" className="float-left"/>
       
