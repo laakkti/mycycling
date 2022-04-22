@@ -254,7 +254,9 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
 
         <NavItem className="ml-auto">
-          <Button variant="outline-success">Query</Button>
+          <Button variant="outline-success" onClick={() => {
+              handleForm(0, null);
+            }}>Query</Button>
         </NavItem>
       </Navbar>
       
@@ -264,6 +266,7 @@ const MyActivities = ({ callBack, user }) => {
         </Col>
         
         {/*{mode === 2 && (*/}
+        {/*
         <Col>
           <Button
             className="float-right mt-1 btn btn-primary btn-sm>"
@@ -273,11 +276,9 @@ const MyActivities = ({ callBack, user }) => {
           >
             <PlusCircleFill width="20" height="20"></PlusCircleFill>
           </Button>
-        </Col>
+          </Col>*/}
         {/*})}*/}
       </Row>
-
-
 
       {showMode === 1 && 
         <YearsGraph df={df} years={years} />
