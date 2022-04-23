@@ -117,6 +117,7 @@ const saveToMongo = async (allActivities) => {
 
     try {
       await ride.save();
+   //   console.log("item "+i+" saved to mongodb");
     } catch (error) {
       console.error("error_message: " + error.message);
 
@@ -131,37 +132,54 @@ const saveToMongo = async (allActivities) => {
       }
     }
   }
+  console.log("save to mongodb ready");
+  return true;
 };
 
 const getStravaActivities = async (request, response) => {
-  const token = request.get("token");
-  const perPage = request.get("perPage");
+  const value = checkToken.checkToken(request);
+  if (!value.status) {
+    return value.data;
+  }
+
+  // seuraavat laita .env-tiedostoon
+  //Strava Credentials
+  let clientID = "77276";
+  let clientSecret = "b90fcaa7490fd8d5d3871f66484ae6cd42921c99";
+
+  // refresh token and call address
+  const refreshToken = "78ef4fba73aed65dbc6f10fab1df1779badbf4a1";
+
+  const callRefresh = `https://www.strava.com/oauth/token?client_id=${clientID}&client_secret=${clientSecret}&refresh_token=${refreshToken}&grant_type=refresh_token`;
+
+  // Use refresh token to get current access token
+  const getToken = async (callRefresh) => {
+    console.log(callRefresh);
+    const response = await axios.post(callRefresh);
+    return response.data.access_token;
+  };
+
+  const token = await getToken(callRefresh);
+  const perPage = 200;
 
   try {
-    const value = checkToken.checkToken(request);
-    if (!value.status) {
-      return value.data;
-    }
-
     const socket = request.app.socket;
 
     socket.emit("onProgress", true);
 
-    // testi viive soeketia varten
+    // testi viive socketia varten
     //setTimeout(() => { socket.emit("onProgress", false); }, 10000);
     const data = await getStravaData(token, perPage);
-    response.json(data.length);
+    socket.emit("onProgress", false);
 
-    response.json(0);
+    response.json(data.length);
   } catch (exception) {
-    console.log(exception.message);
+    console.log("getStravaActivities: " + exception.message);
   }
 };
 
 const getActivities = async (request, response, next) => {
   try {
-    const socket = request.app.socket;
-
     const value = checkToken.checkToken(request);
     if (!value.status) {
       return value.data;

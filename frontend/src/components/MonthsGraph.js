@@ -72,12 +72,14 @@ const MonthsGraph = ({ df, years}) => {
     const layout = {
       width: 1000,
       plot_bgcolor: "#00BBAA",
-      paper_bgcolor: "#00BB55",
+      paper_bgcolor: "#133863",
       yaxis: {
         title: "km",
+        color:"#00FF00"
       },
       xaxis: {
         title: "Month",
+        color:"#00FF00"        
       },
     };
 
@@ -109,7 +111,7 @@ const MonthsGraph = ({ df, years}) => {
         })}
       </select>
       <select
-        style={{ background: "cyan" }}
+        style={{ background: "darkcyan" }}
         value={year}
         onChange={({ target }) => {
           setYear(target.value);

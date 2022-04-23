@@ -82,7 +82,7 @@ const Row = ({ mode, item, func }) => {
     // parametri turha kun/jos köytetään tilamuuttujaa
     const handleSearch = (event, _id) => {
 
-      if (startDate === '' || endDate === ''){ //|| type === '' || repeat === '' || weight === '') {
+      if (startDate === '' || endDate === ''){
 
         return;
 
@@ -90,16 +90,10 @@ const Row = ({ mode, item, func }) => {
 
         event.preventDefault()
 
-        //startDate: startDate.setHours(0,0,0,0),
-        //endDate: endDate.setHours(0,0,0,0)
-
         const data = {
-          //_id: id,
+
           startDate: startDate,
           endDate: endDate
-          //type: type,
-          //repeat: repeat,
-          //weight: weight
         }
 
         if (mode === 0) {
@@ -137,26 +131,8 @@ const Row = ({ mode, item, func }) => {
             </Form.Control>
           </td>
 
-          {/*<td><input className="form-control" id='repeat'
-            type='Number'
-            required
-            value={repeat}
-            onChange={({ target }) => setRepeat(target.value)}
-          /></td>
-          <td><input className="form-control" id='weight'
-            type='Number'
-            required
-            value={weight}
-            onChange={({ target }) => setWeight(target.value)}
-          /></td>*/}
-
           <td>
             <Button type="submit" className="btn btn-success" id={id} onClick={(e) => { handleSearch(e, e.target.id) }}>
-              <Search id={id}></Search>
-            </Button>
-          </td>
-          <td>
-            <Button type="submit" className="btn btn-primary" id={id} onClick={(e) => { handleSearch(e, e.target.id) }}>
               <Search id={id}></Search>
             </Button>
           </td>

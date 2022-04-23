@@ -223,12 +223,11 @@ const MyActivities = ({ callBack, user }) => {
 
         <NavItem className="ml-auto">
           <Button
-            variant="outline-primary"
+            variant="outline-info"
             onClick={() => {
               document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(1);
 
-              //alert(xValue);
             }}
           >
             Years
@@ -236,7 +235,7 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
         <NavItem className="ml-2">
           <Button
-            variant="outline-primary"
+            variant="outline-info"
             onClick={() => {
               document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(2);
@@ -247,7 +246,7 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
 
         <NavItem>
-          <Button className="ml -2"
+          <Button className="ml-2"
             variant="outline-success"
             onClick={() => {
               handleForm(0, null);

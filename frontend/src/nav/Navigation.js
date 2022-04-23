@@ -1,19 +1,7 @@
 //import React from "react";
 import React, { useState, useEffect } from "react";
-import {  
-  Route,  
-  Navigate,
-  Link,
-  Routes,
-  useLocation
-} from "react-router-dom";
-import {
-  Navbar,
-  NavItem,
-  Button,
-  DropdownButton,
-  Dropdown,
-} from "react-bootstrap";
+import { Route, Navigate, Link, Routes, useLocation } from "react-router-dom";
+import { Navbar, NavItem, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { HouseDoor } from "react-bootstrap-icons";
 
@@ -21,24 +9,9 @@ import Homepage from "../routes/Homepage";
 import MyActivities from "../routes/MyActivities";
 
 const Navigation = ({ user, admin, callBack }) => {
-  const handleSelect = (e) => {
-    console.log(e);
-  };
-
   let location = useLocation();
 
-    // useLocation Hook:n avulla päästään käsiksi location-olioon
-    console.log("HOME l:", location.pathname);
-    
-    let path=location.pathname;
-
-    if(path==="/"){
-      
-    }else{
-
-
-    }
-    
+  let path = location.pathname;
 
   return (
     <>
@@ -53,14 +26,13 @@ const Navigation = ({ user, admin, callBack }) => {
         </Link>
         {user && (
           <>
-          
-          {(path==="/") && (
-            <Link to="/MyActivities" className="ml-auto">
-              <NavItem>
-                <Button variant="outline-warning">Activities</Button>
-              </NavItem>
-            </Link>
-          )}
+            {path === "/" && (
+              <Link to="/MyActivities" className="ml-auto">
+                <NavItem>
+                  <Button variant="outline-warning">Activities</Button>
+                </NavItem>
+              </Link>
+            )}
 
             {admin && (
               <NavItem className="ml-auto">
@@ -74,11 +46,14 @@ const Navigation = ({ user, admin, callBack }) => {
                 </Button>
               </NavItem>
             )}
-        
-            <div className="ml-auto" style={{ paddingRight: "15px",color: "darkmagenta" }}>
+
+            <div
+              className="ml-auto"
+              style={{ paddingRight: "15px", color: "darkmagenta" }}
+            >
               {"Kirjautunut: " + user}
             </div>
-            <Link to={"/"} >
+            <Link to={"/"}>
               <NavItem>
                 <Button
                   variant="dark"
@@ -90,23 +65,21 @@ const Navigation = ({ user, admin, callBack }) => {
                 </Button>
               </NavItem>
             </Link>
-            </>
-            )}
-            
-            {!user && (
-              <NavItem className="ml-auto">
-                <Button
-                  variant="info"
-                  onClick={() => {
-                    callBack("login");
-                  }}
-                >
-                  Kirjaudu
-                </Button>
-              </NavItem>
-            )}
-          
-        
+          </>
+        )}
+
+        {!user && (
+          <NavItem className="ml-auto">
+            <Button
+              variant="info"
+              onClick={() => {
+                callBack("login");
+              }}
+            >
+              Kirjaudu
+            </Button>
+          </NavItem>
+        )}
       </Navbar>
 
       <Routes>

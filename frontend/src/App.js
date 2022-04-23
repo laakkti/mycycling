@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Container,Button} from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import socketIOClient from "socket.io-client";
 
-import { useNavigate }  from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // pois*******************
 //import { useHistory} from "react-router-dom";
 //import { Redirect } from 'react-router-dom';
@@ -16,8 +16,6 @@ import Navigation from "./nav/Navigation";
 import LoginDialog from "./components/LoginDialog";
 import ConfirmModal from "./components/ConfirmModal";
 import OnProgressModal from "./components/OnProgressModal";
-
-
 
 import "./App.css";
 
@@ -65,12 +63,10 @@ const App = () => {
     if (process.env.NODE_ENV === "development")
       baseUrl = "http://localhost:5000";
 
-    //       baseUrl ="/";
-    //const socket = socketIOClient("http://localhost:5000");
     const socket = socketIOClient(baseUrl);
 
     socket.on("onProgress", (p) => {
-      console.log("message from bacend onProgress "+p);
+      console.log("message from bacend onProgress " + p);
       setProgressShow(p);
     });
 
@@ -83,7 +79,8 @@ const App = () => {
     });
 
     // tämä lienee parempi suorittaa vasta kirjautumisen jälkeen silloin voisi []-sulkeiden sisälle laittaa jonkun useStaten esim. user!!!!!
-    const getData = async () => {
+
+    /*      const getData = async () => {
       let mongoData = await dataService.getDataFromMongo(getConfig());
       //let data = await getDataFromMongo();
 
@@ -94,7 +91,8 @@ const App = () => {
       setMongoData(mongoData);
     };
 
-    getData();
+    getData();*/
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // tänne kaikki cleaning-jutut
     return () => {
@@ -102,8 +100,28 @@ const App = () => {
     };
   }, []);
 
-  const handleRegister = async (user) => {
+  useEffect(() => {
+    const getData = async () => {
+      let mongoData = await dataService.getDataFromMongo(getConfig());
 
+      console.log("***********************");
+      console.log(mongoData.length);
+      console.log("***********************");
+
+      setMongoData(mongoData);
+      try {
+        navigate("/MyActivities");
+      } catch (exception) {
+        alert(exception.message);
+      }
+    };
+
+    if (user !== "") {
+      getData();
+    }
+  }, [token]);
+
+  const handleRegister = async (user) => {
     const data = await userService.register(user);
 
     return data;
@@ -117,15 +135,14 @@ const App = () => {
         if (response !== null) {
           if (response.code === 200) {
             // oliskos vain data tieto tallessa ja siitä data.email data.token
-            
+
             setUser(response.data.email);
             setUserName(response.data.firstname);
             setAdmin(response.data.admin);
             setToken(response.data.token);
-            navigate("/MyActivities");
-            
-            //let history = useHistory();
-            //history.push("/home")
+
+            // useEffectissä ladataan data seuraavaksi, tarvitaan token joka saatiin kirjautumisen yhteydessä
+            //navigate("/MyActivities");
           }
           return response;
         } else {
@@ -156,10 +173,8 @@ const App = () => {
 
   const callBack = async (topic, data) => {
     if (topic === "getActivitiesData") {
-      
       return mongoData;
     } else if (topic === "updateDb") {
-            
       updateDb();
     } else if (topic === "getSummaryData") {
       const response = await dataService.getSummaryData(data);
@@ -185,21 +200,18 @@ const App = () => {
     }
   };
 
-  const updateDb=()=> {
+  const updateDb = () => {
     setConfirmShow(true);
-  }
-
+  };
 
   const updateDatabase = async (p) => {
     if (p === true) {
       // muuta tämän muuttujan nimeä
-      
+
       await updateDataToMongo();
       //setConfirm(false);
     }
   };
-
-  
 
   // mieti Logindialogin muuttujien nimet uudelleen ja piirrä kuva toiminnasta
   // setLogin on useSatete muuttujan funktio eli säsältäpäin voidaan asettaa näkyvyys
@@ -207,38 +219,15 @@ const App = () => {
   // container fluid tsekkaa eri routejen asetukset container vai container fluid vai ei mitään
   const style = { backgroundColor: "#353b45" };
 
-  const redirect=()=>{
-
-    
-      //history.push("/");
-    //return <Redirect to='/MyActivities'/>
-    //let navigate = useNavigate();
-    //navigate("/MyActivities");
-    //alert("HEippa");
-    /*
-  useEffect(() => {
-    if (user) {
-      let history = useHistory();
-      history.push("/MyActivities");
-    }
-  }, [user]);
-  */
-
-
-  
-  }
-
   return (
     <Container fluid className="App">
       <div style={style}>
-  
         <LoginDialog
           _show={login}
           showDialog={setLogin}
           func={handleLogin}
         ></LoginDialog>
 
-        {/*<ConfirmModal show={confirmShow} onHide={() => setConfirmShow(false)} />*/}
         <ConfirmModal
           show={confirmShow}
           onHide={() => setConfirmShow(false)}
