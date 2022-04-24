@@ -9,6 +9,8 @@ const getTokenFrom = request => {
     return null
 }
 
+
+
 const checkToken = (request) => {
 
     const token = getTokenFrom(request)
@@ -24,7 +26,8 @@ const checkToken = (request) => {
 
     return {
         status: true,
-        data: decodedToken.user
+        data: decodedToken.user,
+        admin: decodedToken.admin 
     };
 }
 

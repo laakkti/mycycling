@@ -26,6 +26,7 @@ const login = async (request, response, next) => {
   const userForToken = {
     user: user.email,
     id: user._id,
+    admin:user.admin,
   }
 
   const token = jwt.sign(userForToken, process.env.TOKEN)

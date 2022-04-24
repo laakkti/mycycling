@@ -82,7 +82,7 @@ const getStravaData = async (access, perPage) => {
     console.log(allActivities.length);
   }
 
-  await saveToMongo(allActivities);
+  //await saveToMongo(allActivities);
 
   return allActivities.length;
 };
@@ -117,7 +117,7 @@ const saveToMongo = async (allActivities) => {
 
     try {
       await ride.save();
-   //   console.log("item "+i+" saved to mongodb");
+      //   console.log("item "+i+" saved to mongodb");
     } catch (error) {
       console.error("error_message: " + error.message);
 
@@ -138,7 +138,7 @@ const saveToMongo = async (allActivities) => {
 
 const getStravaActivities = async (request, response) => {
   const value = checkToken.checkToken(request);
-  if (!value.status) {
+  if (!value.status || !value.admin) {
     return value.data;
   }
 
