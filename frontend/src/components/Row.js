@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap';
-import { Pencil, Trash, XCircleFill, SaveFill,Search} from 'react-bootstrap-icons';
+import { Pencil, Trash, XCircleFill, Search} from 'react-bootstrap-icons';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 

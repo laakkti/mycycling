@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { DataFrame, toDateTime, Series } from "danfojs";
 import DataForm from "../components/DataForm";
 
 import { Button, Container, Row, Col } from "react-bootstrap";
-import { PlusCircleFill } from "react-bootstrap-icons";
 
-import { Navbar, NavItem, DropdownButton, Dropdown } from "react-bootstrap";
-import { HouseDoor } from "react-bootstrap-icons";
+import { Navbar, NavItem } from "react-bootstrap";
 
 import ToastMsg from "../components/ToastMsg";
 import YearsGraph from "../components/YearsGraph";
@@ -17,7 +15,7 @@ const MyActivities = ({ callBack, user }) => {
   const [years, setYears] = useState();
 
   const [mode, setMode] = useState(2); // oletus että kaikki näytetään
-  const [myData, setMyData] = useState([]);
+  //const [myData, setMyData] = useState([]);
   const [myDataToShow, setMyDataToShow] = useState([]);
 
   const [showMode, setShowMode] = useState(0); // oletus että kaikki näytetään
@@ -58,7 +56,6 @@ const MyActivities = ({ callBack, user }) => {
     return sf.unique().values;
   };
 
-  
   const showTheToast = (header, message, delay, backgroundcolor, color) => {
     setMessage({
       header: header,
@@ -76,91 +73,16 @@ const MyActivities = ({ callBack, user }) => {
   };
 
   const handleForm = async (_mode, id) => {
-    console.log("############ mode= " + mode);
-
     if (_mode === 0) {
       let data = [];
-      
-      setMyDataToShow([data]);
-      setMode(_mode);
-    } else if (_mode === 1) {
-      await callBack("deleteItem", id);
-      showTheToast(
-        "Poistaminen",
-        "Tiedon poistaminen onnistui",
-        3000,
-        "#79BEA8",
-        "#000000"
-      );
-      //getAll();
-      //setMode(2);
-    } else if (_mode === 3) {
-      let data = myData.find((item) => {
-        return item._id === id;
-      });
 
       setMyDataToShow([data]);
-      setMode(_mode);
-    } else if (_mode === 2) {
-      // editointimodessa cancel
-
-      setMyDataToShow(myData);
       setMode(_mode);
     } else if (_mode === 5) {
       // id-muuttujassa tulee myös data vois toki olla 2 eri muuttujaa
       let data = id;
-      //      alert(data.date.toISOString());
 
       doQuery(data);
-    } else if (_mode === 5555) {
-      let data = id;
-
-      try {
-        const response = await callBack("addItem", data);
-
-        if (response.code === 503) {
-          showTheToast(
-            "Virhetilanne",
-            response.message,
-            3000,
-            "#FF9999",
-            "#000000"
-          );
-        } else {
-          showTheToast(
-            "Lisääminen",
-            "Tiedon lisääminen onnistui",
-            3000,
-            "#79BEA8",
-            "#000000"
-          );
-          //getAll();
-        }
-      } catch (exception) {
-        showTheToast(
-          "Virhetilanne",
-          exception.message,
-          3000,
-          "#FF9999",
-          "#000000"
-        );
-      }
-    } else if (_mode === 6) {
-      let data = id;
-
-      // virhetarkastwlu try-catch puuttuuu LISÄÄ
-      await callBack("updateItem", data);
-
-      showTheToast(
-        "Päivitys",
-        "Tiedon päivittäminen onnistui",
-        3000,
-        "#79BEA8",
-        "#000000"
-      );
-
-      //getAll();
-      //setMode(2);
     }
   };
 
@@ -197,14 +119,15 @@ const MyActivities = ({ callBack, user }) => {
         console.log(date);
         let val = sub_df.iloc({ rows: [i] }).toJSON();
         console.log("----------------------------------");
-        val[0].distance=val[0].distance/1000;
-        val[0].average_speed=(val[0].distance/val[0].moving_time*3600).toFixed(2);
-        //console.log((val[0].distance/val[0].moving_time*3600).toFixed(2));
+        val[0].distance = val[0].distance / 1000;
+        val[0].average_speed = (
+          (val[0].distance / val[0].moving_time) *
+          3600
+        ).toFixed(2);
+
         result.push(val[0]);
       }
     }
-
-    //df['Average Speed']=round(df['Distance']/df['Moving Time']*3600,2)
 
     setMyDataToShow(result);
     setMode(2);
@@ -213,7 +136,13 @@ const MyActivities = ({ callBack, user }) => {
   let header = ["Start", "End", "Topic"];
   if (mode === 2) {
     // nämää pitäis kai saada jostakin luettua, onko josnin kentät minkä nimisiä
-    header = ["Date", "Duration (s)", "Distance (km)", "Avg speed (km/h)", "Avg hr"];
+    header = [
+      "Date",
+      "Duration (s)",
+      "Distance (km)",
+      "Avg speed (km/h)",
+      "Avg hr",
+    ];
   }
   //{ background: "#091834" }
   return (
@@ -227,7 +156,6 @@ const MyActivities = ({ callBack, user }) => {
             onClick={() => {
               document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(1);
-
             }}
           >
             Years
@@ -246,7 +174,8 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
 
         <NavItem>
-          <Button className="ml-2"
+          <Button
+            className="ml-2"
             variant="outline-success"
             onClick={() => {
               handleForm(0, null);
@@ -263,14 +192,13 @@ const MyActivities = ({ callBack, user }) => {
         <Col>
           <h2> </h2>
         </Col>
-
       </Row>
 
       {showMode === 1 && <YearsGraph df={df} years={years} />}
       {showMode === 2 && <MonthsGraph df={df} years={years} />}
 
       {/*{showMode !== 3 && */}
-          
+
       {showMode === 3 && (
         <DataForm
           mode={mode}

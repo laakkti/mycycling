@@ -1,5 +1,4 @@
-//import React from "react";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Route, Navigate, Link, Routes, useLocation } from "react-router-dom";
 import { Navbar, NavItem, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";

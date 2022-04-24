@@ -40,12 +40,8 @@ const MonthsGraph = ({ df, years}) => {
         text: "",
         x: 0,
       },
-      legend: {
-        bgcolor: "#fcba03",
-        bordercolor: "#444",
-        borderwidth: 1,
-        font: { family: "Arial", size: 10, color: "#fff" },
-      },
+      
+      
       width: 1000,
       yaxis: {
         title: "km",
@@ -53,6 +49,8 @@ const MonthsGraph = ({ df, years}) => {
       xaxis: {
         title: "Month",
       },
+      plot_bgcolor: "#133863",
+      paper_bgcolor: "#133863",      
     };
 
     const config = {
@@ -71,24 +69,27 @@ const MonthsGraph = ({ df, years}) => {
 
     const layout = {
       width: 1000,
-      plot_bgcolor: "#00BBAA",
+      plot_bgcolor: "#133863",
       paper_bgcolor: "#133863",
+      
+      
       yaxis: {
         title: "km",
         color:"#00FF00"
       },
       xaxis: {
         title: "Month",
-        color:"#00FF00"        
+        color:"#00FFFF"        
       },
+      
     };
 
     const config = {
       displayModeBar: false,
-      displaylogo: false,
+      displaylogo: false,      
     };
 
-    gDf.plot("plot_div").bar({ layout, config });
+    gDf.plot("plot_div").bar({ layout, config});
   }
   const modes = ["bar", "line"];
 

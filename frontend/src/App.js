@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import socketIOClient from "socket.io-client";
 
 import { useNavigate } from "react-router-dom";
-// pois*******************
-//import { useHistory} from "react-router-dom";
-//import { Redirect } from 'react-router-dom';
-//************************
 
 import userService from "./services/user-service";
 import dataService from "./services/data-service";
@@ -20,26 +16,19 @@ import OnProgressModal from "./components/OnProgressModal";
 import "./App.css";
 
 const App = () => {
-  // turha koska dataFrame sisältää jatkossa sourcen
-  //const [activities, setActivities] = useState({});
-  //const [stravaToken, setStravaToken] = useState({});
   const [mongoData, setMongoData] = useState();
-
   const [user, setUser] = useState("");
   const [userName, setUserName] = useState("");
   const [admin, setAdmin] = useState(false);
   const [token, setToken] = useState("");
-  // toisaalta kun on tokenperusteinen toiminta niin jos token niin  ollaa inessä
+
   const [login, setLogin] = useState(false);
   const [progressShow, setProgressShow] = useState(false);
   const [confirmShow, setConfirmShow] = useState(false);
-  //const [confirm, setConfirm] = useState(false);
+  //const [loadingStatus, setLoadingStatus] = useState("");
+  
 
-  //const history = useHistory();
   let navigate = useNavigate();
-  // seuraava data-serviceen!!!!
-  // tähän ehto onko dev vai... ON SERVICESSA
-  //const baseUrl = "http://localhost:5000/api/data/";
 
   const getConfig = () => {
     let _token = `bearer ${token}`;
@@ -54,11 +43,7 @@ const App = () => {
     await dataService.updateDataToMongo(getConfig());
   };
 
-  // ehkä kuitenkin suoritetaan kirjautumisen yhteydessä eli ei haeta turhaan dataa jos...
-
   useEffect(() => {
-    // vai muutetaanko vain getData -- koska muita lähteitä ei ole
-
     let baseUrl = "/";
     if (process.env.NODE_ENV === "development")
       baseUrl = "http://localhost:5000";
@@ -66,7 +51,9 @@ const App = () => {
     const socket = socketIOClient(baseUrl);
 
     socket.on("onProgress", (p) => {
-      console.log("message from bacend onProgress " + p);
+      console.log("message from backend onProgress " + p);
+      //setLoadingStatus(p);
+      //alert(p);
       setProgressShow(p);
     });
 
@@ -74,24 +61,9 @@ const App = () => {
       console.log("socket connected");
     });
 
-    socket.on("connected", (data) => {
-      console.log("message from bacend connectedxxx " + data);
+    socket.on("connected", (p) => {
+      console.log("message from backend connected" + p);
     });
-
-    // tämä lienee parempi suorittaa vasta kirjautumisen jälkeen silloin voisi []-sulkeiden sisälle laittaa jonkun useStaten esim. user!!!!!
-
-    /*      const getData = async () => {
-      let mongoData = await dataService.getDataFromMongo(getConfig());
-      //let data = await getDataFromMongo();
-
-      console.log("***********************");
-      console.log(mongoData.length);
-      console.log("***********************");
-
-      setMongoData(mongoData);
-    };
-
-    getData();*/
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // tänne kaikki cleaning-jutut
@@ -103,10 +75,6 @@ const App = () => {
   useEffect(() => {
     const getData = async () => {
       let mongoData = await dataService.getDataFromMongo(getConfig());
-
-      console.log("***********************");
-      console.log(mongoData.length);
-      console.log("***********************");
 
       setMongoData(mongoData);
       try {
@@ -134,15 +102,10 @@ const App = () => {
 
         if (response !== null) {
           if (response.code === 200) {
-            // oliskos vain data tieto tallessa ja siitä data.email data.token
-
             setUser(response.data.email);
             setUserName(response.data.firstname);
             setAdmin(response.data.admin);
             setToken(response.data.token);
-
-            // useEffectissä ladataan data seuraavaksi, tarvitaan token joka saatiin kirjautumisen yhteydessä
-            //navigate("/MyActivities");
           }
           return response;
         } else {
@@ -154,49 +117,15 @@ const App = () => {
     }
   };
 
-  const getMyData = async (user) => {
-    return await dataService.getMyData(user, getConfig());
-  };
-
-  const addItem = async (data) => {
-    //alert(await dataService.addItem(data, getConfig()));
-    return await dataService.addItem(data, getConfig());
-  };
-
-  const deleteItem = async (id) => {
-    return await dataService.deleteItem(id, getConfig());
-  };
-
-  const updateItem = async (id) => {
-    return await dataService.updateItem(id, getConfig());
-  };
-
   const callBack = async (topic, data) => {
     if (topic === "getActivitiesData") {
       return mongoData;
     } else if (topic === "updateDb") {
       updateDb();
-    } else if (topic === "getSummaryData") {
-      const response = await dataService.getSummaryData(data);
-      return response.data;
     } else if (topic === "login") {
       setLogin(true);
     } else if (topic === "logout") {
       setUserName("");
-    } else if (topic === "addItem") {
-      //data.user = user;
-
-      let response = await addItem(data);
-
-      return response;
-    } else if (topic === "deleteItem") {
-      let response = await deleteItem(data);
-      return response;
-    } else if (topic === "updateItem") {
-      return await updateItem(data);
-    } else if (topic === "getMyData") {
-      const response = await getMyData(user);
-      return response.data;
     }
   };
 
@@ -206,22 +135,15 @@ const App = () => {
 
   const updateDatabase = async (p) => {
     if (p === true) {
-      // muuta tämän muuttujan nimeä
-
       await updateDataToMongo();
-      //setConfirm(false);
     }
   };
 
-  // mieti Logindialogin muuttujien nimet uudelleen ja piirrä kuva toiminnasta
-  // setLogin on useSatete muuttujan funktio eli säsältäpäin voidaan asettaa näkyvyys
-
-  // container fluid tsekkaa eri routejen asetukset container vai container fluid vai ei mitään
   const style = { backgroundColor: "#353b45" };
 
   return (
     <Container fluid className="App">
-      <div style={style}>
+      <div style={style}>        
         <LoginDialog
           _show={login}
           showDialog={setLogin}
@@ -237,6 +159,7 @@ const App = () => {
       </div>
 
       <Navigation user={userName} admin={admin} callBack={callBack} />
+      
     </Container>
   );
 };
