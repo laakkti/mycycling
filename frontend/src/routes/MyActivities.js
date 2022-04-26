@@ -21,6 +21,8 @@ const MyActivities = ({ callBack, user }) => {
   const [myDataToShow, setMyDataToShow] = useState([]);
 
   const [showMode, setShowMode] = useState(0); // oletus että kaikki näytetään
+//  const [selectedIndex, setSelectedIndex] = useState(0);
+
 
   const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState({
@@ -74,10 +76,10 @@ const MyActivities = ({ callBack, user }) => {
     setShowToast(true);
   };
 
-  const handleForm = async (_mode, id) => {
+  const handleForm = async (_mode, id,selectedIndex) => {
     if (_mode === 0) {
       let data = [];
-
+      //setSelectedIndex(selectedIndex); 
       setMyDataToShow([data]);
       setMode(_mode);
     } else if (_mode === 5) {
@@ -140,10 +142,10 @@ const MyActivities = ({ callBack, user }) => {
     // nämää pitäis kai saada jostakin luettua, onko josnin kentät minkä nimisiä
     header = [
       "Date",
-      "Duration (s)",
+      "Moving time (s)",
       "Distance (km)",
       "Avg speed (km/h)",
-      "Avg hr",
+      "Avg hr (bpm)",
     ];
   }
   //{ background: "#091834" }
@@ -214,7 +216,7 @@ const MyActivities = ({ callBack, user }) => {
           mode={mode}
           data={myDataToShow}
           header={header}
-          func={handleForm}
+          func={handleForm}          
         />
       )}
 
