@@ -10,7 +10,7 @@ const Homepage = () => {
           Pyöräilyaktiviteettien data-analytiikka
         </div>
 
-        <h6 style={{ color: "#609CE1" }}>2022 ©AA4598</h6>
+        <h6 style={{ color: "#609CE1",marginTop: "8px"}}>2022 ©AA4598</h6>
       </div>
       <div
         style={{

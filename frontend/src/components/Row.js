@@ -130,16 +130,16 @@ const Row = ({ mode, item, func }) => {
 
             </Form.Control>
           </td>
-
+          
           <td>
-            <Button type="submit" className="btn btn-success" id={id} onClick={(e) => { handleSearch(e, e.target.id) }}>
+            <Button type="submit" className="float-right ml-5 btn btn-success" id={id} onClick={(e) => { handleSearch(e, e.target.id) }}>
               <Search id={id}></Search>
             </Button>
           </td>
           <td>
-            <Button className="btn btn-secondary" id={item._id} onClick={(e) => { handleRow(2, e.target.id) }}>
+            {/*<Button className="btn btn-secondary" id={item._id} onClick={(e) => { handleRow(2, e.target.id) }}>
               <XCircleFill id={item._id}></XCircleFill>
-            </Button>
+            </Button>*/}
           </td>
 
         </tr>

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DataFrame, toDateTime } from "danfojs";
 
-const YearsGraph = ({ df, years }) => {
+const YearsGraph = ({ df, _years }) => {
   const [mode, setMode] = useState("bar");
+  const [val, setVal] = useState([]);
+  const [years, setYears] = useState([]);
+
   let condition;
   let tmp;
 
-  let val = [];
+  let _val = [];
 
-  years.forEach((item) => {
+  _years.forEach((item) => {
     let sub_df = df.loc({
       columns: ["distance", "start_date"],
     });
@@ -18,8 +21,15 @@ const YearsGraph = ({ df, years }) => {
 
     tmp = sub_df["distance"].sum();
     tmp = Math.round(tmp / 1000);
-    val.push(tmp);
+    _val.push(tmp);
   });
+
+  useEffect(() => {
+    setYears(_years);
+    setVal(_val);
+  }, []);
+
+  // _val, _years
 
   const gDf = new DataFrame({ ride: val }, { index: years });
   let layout;
@@ -28,13 +38,15 @@ const YearsGraph = ({ df, years }) => {
   if (mode === "bar") {
     layout = {
       width: 1000,
-      plot_bgcolor: "#00BBAA",
-      paper_bgcolor: "#00BB55",
+      plot_bgcolor: "#133863",
+      paper_bgcolor: "#133863",
       yaxis: {
         title: "km",
+        color: "#00FF00",
       },
       xaxis: {
         title: "Year",
+        color: "#00FF00",
       },
     };
 
@@ -50,18 +62,24 @@ const YearsGraph = ({ df, years }) => {
         text: "",
         x: 0,
       },
+      width: 1000,
+      plot_bgcolor: "#133863",
+      paper_bgcolor: "#133863",
+
       legend: {
         bgcolor: "#fcba03",
         bordercolor: "#444",
         borderwidth: 1,
         font: { family: "Arial", size: 10, color: "#fff" },
       },
-      width: 1000,
+
       yaxis: {
         title: "km",
+        color: "#00FF00",
       },
       xaxis: {
         title: "Year",
+        color: "#00FF00",
       },
     };
 
@@ -78,8 +96,9 @@ const YearsGraph = ({ df, years }) => {
 
   return (
     <div>
+      <div id="plot_div" />
       <select
-        style={{ background: "cyan" }}
+        className="float-right mr-5 btn btn-success"
         value={mode}
         onChange={({ target }) => {
           setMode(target.value);

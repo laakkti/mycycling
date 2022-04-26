@@ -25,7 +25,7 @@ const Navigation = ({ user, admin, callBack }) => {
         </Link>
         {user && (
           <>
-            {path === "/" && (
+            {(path === "/") && (
               <Link to="/MyActivities" className="ml-auto">
                 <NavItem>
                   <Button variant="outline-warning">Activities</Button>
@@ -33,10 +33,10 @@ const Navigation = ({ user, admin, callBack }) => {
               </Link>
             )}
 
-            {admin && (
+            {(admin && (path === "/")) && (
               <NavItem className="ml-auto">
                 <Button
-                  variant="outline-info"
+                  variant="outline-danger"
                   onClick={() => {
                     callBack("updateDb");
                   }}
@@ -48,7 +48,7 @@ const Navigation = ({ user, admin, callBack }) => {
 
             <div
               className="ml-auto"
-              style={{ paddingRight: "15px", color: "darkmagenta" }}
+              style={{ paddingRight: "15px", color: "darkcyan" }}
             >
               {"Kirjautunut: " + user}
             </div>

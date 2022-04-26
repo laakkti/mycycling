@@ -10,6 +10,8 @@ import ToastMsg from "../components/ToastMsg";
 import YearsGraph from "../components/YearsGraph";
 import MonthsGraph from "../components/MonthsGraph";
 
+import Logo from "../img/logo.svg";
+
 const MyActivities = ({ callBack, user }) => {
   const [df, setDf] = useState();
   const [years, setYears] = useState();
@@ -152,9 +154,8 @@ const MyActivities = ({ callBack, user }) => {
 
         <NavItem className="ml-auto">
           <Button
-            variant="outline-info"
+            variant="outline-success"
             onClick={() => {
-              document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(1);
             }}
           >
@@ -163,9 +164,8 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
         <NavItem className="ml-2">
           <Button
-            variant="outline-info"
+            variant="outline-warning"
             onClick={() => {
-              document.getElementById("plot_div").style.visibility = "visible";
               setShowMode(2);
             }}
           >
@@ -176,11 +176,10 @@ const MyActivities = ({ callBack, user }) => {
         <NavItem>
           <Button
             className="ml-2"
-            variant="outline-success"
+            variant="outline-primary"
             onClick={() => {
               handleForm(0, null);
               setShowMode(3);
-              document.getElementById("plot_div").style.visibility = "hidden";
             }}
           >
             Query
@@ -194,8 +193,19 @@ const MyActivities = ({ callBack, user }) => {
         </Col>
       </Row>
 
-      {showMode === 1 && <YearsGraph df={df} years={years} />}
-      {showMode === 2 && <MonthsGraph df={df} years={years} />}
+      {showMode === 0 && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img src={Logo} width="50%" style={{ marginTop: "50px" }} alt="" />
+        </div>
+      )}
+      {showMode === 1 && <YearsGraph df={df} _years={years} />}
+      {showMode === 2 && <MonthsGraph df={df} _years={years} />}
 
       {/*{showMode !== 3 && */}
 
@@ -208,7 +218,7 @@ const MyActivities = ({ callBack, user }) => {
         />
       )}
 
-      <div id="plot_div" />
+      <div id="plot_div" style={{ display: "none" }} />
       <ToastMsg
         show={showToast}
         close={() => {
