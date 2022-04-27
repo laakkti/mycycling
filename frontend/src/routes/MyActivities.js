@@ -9,6 +9,7 @@ import { Navbar, NavItem } from "react-bootstrap";
 import ToastMsg from "../components/ToastMsg";
 import YearsGraph from "../components/YearsGraph";
 import MonthsGraph from "../components/MonthsGraph";
+import MonthsSummaryGraph from "../components/MonthsSummaryGraph";
 
 import Logo from "../img/logo.svg";
 
@@ -175,6 +176,17 @@ const MyActivities = ({ callBack, user }) => {
           </Button>
         </NavItem>
 
+        <NavItem className="ml-2">
+          <Button
+            variant="outline-info"
+            onClick={() => {
+              setShowMode(4);
+            }}
+          >
+            Summary
+          </Button>
+        </NavItem>
+
         <NavItem>
           <Button
             className="ml-2"
@@ -208,6 +220,7 @@ const MyActivities = ({ callBack, user }) => {
       )}
       {showMode === 1 && <YearsGraph df={df} _years={years} />}
       {showMode === 2 && <MonthsGraph df={df} _years={years} />}
+      {showMode === 4 && <MonthsSummaryGraph df={df} _years={years} />}
 
       {/*{showMode !== 3 && */}
 

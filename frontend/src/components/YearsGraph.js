@@ -66,12 +66,7 @@ const YearsGraph = ({ df, _years }) => {
       plot_bgcolor: "#133863",
       paper_bgcolor: "#133863",
 
-      legend: {
-        bgcolor: "#fcba03",
-        bordercolor: "#444",
-        borderwidth: 1,
-        font: { family: "Arial", size: 10, color: "#fff" },
-      },
+      
 
       yaxis: {
         title: "km",
