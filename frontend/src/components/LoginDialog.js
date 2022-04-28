@@ -57,7 +57,7 @@ const LoginDialog = ({ _show, showDialog, func }) => {
   const regLabels = () => {
 
     let _labels = {
-      title: 'Sign in',
+      title: 'Sign up',
       btnClose: 'Close'
     }
     setLabels(_labels);

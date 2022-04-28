@@ -43,7 +43,7 @@ const RegisterForm = ({ show, close, func }) => {
             if (data.code !== 200) {
 
                 setMessage({
-                    header: 'Virhe',
+                    header: 'Error',
                     message: data.message,
                     closeParent: false,
                     autohide: true,
@@ -58,7 +58,7 @@ const RegisterForm = ({ show, close, func }) => {
             } else if (data.code === 200) {
 
                 setMessage({
-                    header: 'Rekisteröinti onnistui',
+                    header: 'Sign up success',
                     message: data.message,
                     closeParent: true,
                     autohide: true,
