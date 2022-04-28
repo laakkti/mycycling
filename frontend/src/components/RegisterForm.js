@@ -97,11 +97,11 @@ const RegisterForm = ({ show, close, func }) => {
                     <Modal.Body>
 
                         <Form.Group >
-                            <Form.Label>Etunimi</Form.Label>
+                            <Form.Label>Firstname</Form.Label>
                             <Form.Control type="input" placeholder="Etunimi" value={firstName} onChange={({ target }) => setFirstName(target.value)} required />
                         </Form.Group>
                         <Form.Group >
-                            <Form.Label>Sukunimi</Form.Label>
+                            <Form.Label>Surname</Form.Label>
                             <Form.Control type="input" placeholder="Sukunimi" value={surName} onChange={({ target }) => setSurName(target.value)} required />
                         </Form.Group>
                         <Form.Group >
@@ -109,7 +109,7 @@ const RegisterForm = ({ show, close, func }) => {
                             <Form.Control type="email" placeholder="email" value={email} onChange={({ target }) => setEmail(target.value)} required />
                         </Form.Group>
                         <Form.Group >
-                            <Form.Label>Salasana</Form.Label>
+                            <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Salasana" value={password} onChange={({ target }) => setPassword(target.value)} required />
                         </Form.Group>
 
@@ -121,10 +121,10 @@ const RegisterForm = ({ show, close, func }) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => { close(false) }}>
-                            Sulje
+                            Close
                         </Button>
                         <Button type='Submit' variant="primary">
-                            Valmis
+                            Ready
                         </Button>
                     </Modal.Footer>
                 </Form>

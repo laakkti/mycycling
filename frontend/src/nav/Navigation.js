@@ -50,7 +50,7 @@ const Navigation = ({ user, admin, callBack }) => {
               className="ml-auto"
               style={{ paddingRight: "15px", color: "darkcyan" }}
             >
-              {"Kirjautunut: " + user}
+              {"Logged in: " + user}
             </div>
             <Link to={"/"}>
               <NavItem>
@@ -60,7 +60,7 @@ const Navigation = ({ user, admin, callBack }) => {
                     callBack("logout");
                   }}
                 >
-                  Kirjaudu ulos
+                  Log out
                 </Button>
               </NavItem>
             </Link>
@@ -75,7 +75,7 @@ const Navigation = ({ user, admin, callBack }) => {
                 callBack("login");
               }}
             >
-              Kirjaudu
+              Log in
             </Button>
           </NavItem>
         )}

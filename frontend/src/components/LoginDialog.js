@@ -10,8 +10,8 @@ import RegisterForm from './RegisterForm';
 const LoginDialog = ({ _show, showDialog, func }) => {
 
   let _labels = {
-    title: 'Kirjautuminen',
-    btnClose: 'Sulje'
+    title: 'Log in',
+    btnClose: 'Close'
   }
 
   const [email, setEmail] = useState("");
@@ -57,8 +57,8 @@ const LoginDialog = ({ _show, showDialog, func }) => {
   const regLabels = () => {
 
     let _labels = {
-      title: 'Rekisteröinti',
-      btnClose: 'Sulje'
+      title: 'Sign in',
+      btnClose: 'Close'
     }
     setLabels(_labels);
   }
@@ -66,8 +66,8 @@ const LoginDialog = ({ _show, showDialog, func }) => {
   const logLabels = () => {
 
     let _labels = {
-      title: 'Kirjautuminen',
-      btnClose: 'Sulje'
+      title: 'Login',
+      btnClose: 'Close'
     }
     setLabels(_labels);
   }
@@ -92,7 +92,7 @@ const LoginDialog = ({ _show, showDialog, func }) => {
         if (data === null) {
 
           closeParent = true;
-          message = "Ei yhteyttä backendiin";
+          message = "No connection to backend";
         } else {
 
           message = data.message;
@@ -117,8 +117,8 @@ const LoginDialog = ({ _show, showDialog, func }) => {
       } else if (data.code === 200) {
 
         setMessage({
-          header: 'Kirjautuminen onnistui',
-          message: 'Tervetuloa ;)',
+          header: 'Login succesfull',
+          message: 'Welcome ;)',
           autohide: true,
           delay: 2000,
           closeParent: true,
@@ -163,7 +163,7 @@ const LoginDialog = ({ _show, showDialog, func }) => {
                   <Form.Control type="email" placeholder="Enter email" value={email} onChange={({ target }) => setEmail(target.value)} required />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Salasana</Form.Label>
+                  <Form.Label>Password</Form.Label>
                   <Form.Control type="password" placeholder="Password" value={password} onChange={({ target }) => setPassword(target.value)} required />
                 </Form.Group>
 
@@ -172,13 +172,13 @@ const LoginDialog = ({ _show, showDialog, func }) => {
               <Modal.Footer>
                 <>
                   <Button variant="warning" className='mr-auto' onClick={() => { showRegisterForm(true) }}>
-                    Uusi käyttäjä
+                    New user
                   </Button>
                   <Button variant="secondary" onClick={() => { handleLogin(false) }}>
                     {labels.btnClose}
                   </Button>
                   <Button type='submit' variant="primary">
-                    Kirjaudu
+                    Log in
                   </Button>
                 </>
               </Modal.Footer>

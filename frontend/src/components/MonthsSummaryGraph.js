@@ -124,7 +124,7 @@ const MonthsSummaryGraph = ({ df, _years }) => {
     <div>
       <div id="plot_div" />
       <select
-        className="float-right mr-5 btn-success"
+        className="float-right mr-5 btn btn-success"
         value={mode}
         onChange={({ target }) => {
           setMode(target.value);
