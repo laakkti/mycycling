@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataFrame, toDateTime } from "danfojs";
+import { Form } from "react-bootstrap";
 
 const MonthsGraph = ({ df, _years }) => {
   const [mode, setMode] = useState("bar");
@@ -103,8 +104,12 @@ const MonthsGraph = ({ df, _years }) => {
   return (
     <div>
       <div id="plot_div" />
-      <select
-        className="float-right mr-5 btn btn-success"
+      <Form.Control
+        className="float-right mr-5 btn btn-info"
+        style={{ width: "auto" }}
+        as="select"
+        id="type"
+        custom
         value={mode}
         onChange={({ target }) => {
           setMode(target.value);
@@ -117,9 +122,14 @@ const MonthsGraph = ({ df, _years }) => {
             </option>
           );
         })}
-      </select>
-      <select
-        className="float-right mr-1 btn btn-info"        
+      </Form.Control>
+
+      <Form.Control
+        className="float-right mr-1 btn btn-info"
+        style={{ width: "auto" }}
+        as="select"
+        id="type"
+        custom
         value={year}
         onChange={({ target }) => {
           setYear(target.value);
@@ -132,7 +142,8 @@ const MonthsGraph = ({ df, _years }) => {
             </option>
           );
         })}
-      </select>
+      </Form.Control>
+            
     </div>
   );
 };

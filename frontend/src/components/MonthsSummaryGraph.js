@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataFrame, toDateTime } from "danfojs";
+import { Form } from "react-bootstrap";
 
 const MonthsSummaryGraph = ({ df, _years }) => {
   const [mode, setMode] = useState("bar");
@@ -16,15 +17,14 @@ const MonthsSummaryGraph = ({ df, _years }) => {
     setYear(_years[0]);    
   }, []);*/
 
-  let summary=[];
-  let items={}; 
+  let summary = [];
+  let items = {};
 
   //for (let i = 0; i < _years.length; i++) {
   for (let i = 0; i < _years.length; i++) {
     let sub_df = df.loc({
       columns: ["distance", "start_date"],
     });
-     
 
     let _year = parseInt(_years[i]);
 
@@ -45,14 +45,13 @@ const MonthsSummaryGraph = ({ df, _years }) => {
       _val.push(sum);
     }
     //summary.push(_val);
-    items[_years[i]]=_val;
+    items[_years[i]] = _val;
   }
 
   useEffect(() => {
     setYears(_years);
     //setVal(_val);
   }, []);
-
 
   if (mode === "line") {
     //const gDf = new DataFrame({ ride: _val }, { index: months });
@@ -64,8 +63,8 @@ const MonthsSummaryGraph = ({ df, _years }) => {
         x: 0,
       },
       legend: {
-        bgcolor: "133863",        
-        font: { family: "Arial", size: 12,color: "#14a2b8"},
+        bgcolor: "133863",
+        font: { family: "Arial", size: 12, color: "#14a2b8" },
       },
       width: 1000,
       yaxis: {
@@ -97,7 +96,7 @@ const MonthsSummaryGraph = ({ df, _years }) => {
       paper_bgcolor: "#133863",
 
       legend: {
-        bgcolor: "133863",        
+        bgcolor: "133863",
         font: { family: "Arial", size: 12, color: "#14a2b8" },
       },
 
@@ -123,8 +122,12 @@ const MonthsSummaryGraph = ({ df, _years }) => {
   return (
     <div>
       <div id="plot_div" />
-      <select
-        className="float-right mr-5 btn btn-success"
+      <Form.Control
+        className="float-right mr-5 btn btn-info"
+        style={{ width: "auto" }}
+        as="select"
+        id="type"
+        custom
         value={mode}
         onChange={({ target }) => {
           setMode(target.value);
@@ -137,8 +140,7 @@ const MonthsSummaryGraph = ({ df, _years }) => {
             </option>
           );
         })}
-      </select>
-     
+      </Form.Control>
     </div>
   );
 };

@@ -19,7 +19,7 @@ const DataForm = ({ mode, data, header, func}) => {
       <tbody>
         <tr>
           {header.map((item, ind) => {
-            return <th key={ind} style={{background:"#000000",color:"#00FFFF"}}>{item}</th>;
+            return <td key={ind} style={{background:"#091834",color:"#79abff"}}>{item}</td>;
           })}
         </tr>
       </tbody>

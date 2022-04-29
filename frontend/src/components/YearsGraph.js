@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataFrame, toDateTime } from "danfojs";
+import { Form } from "react-bootstrap";
 
 const YearsGraph = ({ df, _years }) => {
   const [mode, setMode] = useState("bar");
@@ -66,8 +67,6 @@ const YearsGraph = ({ df, _years }) => {
       plot_bgcolor: "#133863",
       paper_bgcolor: "#133863",
 
-      
-
       yaxis: {
         title: "km",
         color: "#00FF00",
@@ -92,8 +91,12 @@ const YearsGraph = ({ df, _years }) => {
   return (
     <div>
       <div id="plot_div" />
-      <select
+      <Form.Control
         className="float-right mr-5 btn btn-success"
+        style={{ width: "auto" }}
+        as="select"
+        id="type"
+        custom
         value={mode}
         onChange={({ target }) => {
           setMode(target.value);
@@ -106,7 +109,7 @@ const YearsGraph = ({ df, _years }) => {
             </option>
           );
         })}
-      </select>
+      </Form.Control>
     </div>
   );
 };

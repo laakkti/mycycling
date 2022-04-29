@@ -11,7 +11,7 @@ import dataService from "./services/data-service";
 import Navigation from "./nav/Navigation";
 import LoginDialog from "./components/LoginDialog";
 import ConfirmModal from "./components/ConfirmModal";
-import OnProgressModal from "./components/OnProgressModal";
+//import OnProgressModal from "./components/OnProgressModal";
 
 import "./App.css";
 
@@ -25,9 +25,8 @@ const App = () => {
   const [login, setLogin] = useState(false);
   const [progressShow, setProgressShow] = useState(false);
   const [confirmShow, setConfirmShow] = useState(false);
-  //const [loadingStatus, setLoadingStatus] = useState("");
   
-
+  
   let navigate = useNavigate();
 
   const getConfig = () => {
@@ -52,8 +51,7 @@ const App = () => {
 
     socket.on("onProgress", (p) => {
       console.log("message from backend onProgress " + p);
-      //setLoadingStatus(p);
-      //alert(p);
+      
       setProgressShow(p);
     });
 
@@ -155,10 +153,10 @@ const App = () => {
           onHide={() => setConfirmShow(false)}
           updateDb={updateDatabase}
         />
-        <OnProgressModal show={progressShow} message={"Loading..."} />
+        {/*<OnProgressModal show={progressShow} message={"Loading..."} />*/}
       </div>
 
-      <Navigation user={userName} admin={admin} callBack={callBack} />
+      <Navigation user={userName} admin={admin} callBack={callBack} progress={progressShow} />
       
     </Container>
   );

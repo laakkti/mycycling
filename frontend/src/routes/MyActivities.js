@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataFrame, toDateTime, Series } from "danfojs";
 import DataForm from "../components/DataForm";
 
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col, Form } from "react-bootstrap";
 
 import { Navbar, NavItem } from "react-bootstrap";
 
@@ -17,13 +17,15 @@ const MyActivities = ({ callBack, user }) => {
   const [df, setDf] = useState();
   const [years, setYears] = useState();
 
-  const [mode, setMode] = useState(2); // oletus että kaikki näytetään
+  const [mode, setMode] = useState(2);
+  const [topics, setTopics] = useState(["Distance"]);
+  const [topic, setTopic] = useState(["Distance"]);
+
   //const [myData, setMyData] = useState([]);
   const [myDataToShow, setMyDataToShow] = useState([]);
 
   const [showMode, setShowMode] = useState(0); // oletus että kaikki näytetään
-//  const [selectedIndex, setSelectedIndex] = useState(0);
-
+  //  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState({
@@ -77,10 +79,10 @@ const MyActivities = ({ callBack, user }) => {
     setShowToast(true);
   };
 
-  const handleForm = async (_mode, id,selectedIndex) => {
+  const handleForm = async (_mode, id, selectedIndex) => {
     if (_mode === 0) {
       let data = [];
-      //setSelectedIndex(selectedIndex); 
+      //setSelectedIndex(selectedIndex);
       setMyDataToShow([data]);
       setMode(_mode);
     } else if (_mode === 5) {
@@ -89,10 +91,6 @@ const MyActivities = ({ callBack, user }) => {
 
       doQuery(data);
     }
-  };
-
-  const action = () => {
-    //getAll();
   };
 
   const doQuery = async (data) => {
@@ -138,22 +136,44 @@ const MyActivities = ({ callBack, user }) => {
     setMode(2);
   };
 
-  let header = ["Start", "End", "Topic"];
+  let header = ["Start", "End", "Topic", " ", ""]; // tyhjä koska buttoineille on oma sarakeensa data-riveillä
   if (mode === 2) {
-    // nämää pitäis kai saada jostakin luettua, onko josnin kentät minkä nimisiä
     header = [
       "Date",
       "Moving time (s)",
       "Distance (km)",
       "Avg speed (km/h)",
       "Avg hr (bpm)",
+      " ",
     ];
   }
-  //{ background: "#091834" }
+
   return (
     <Container>
       <Navbar style={{ background: "#000000" }} variant="dark">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+        <NavItem className="float-left">
+          <Form.Control
+            className="mr-1 btn btn-info"
+            style={{ width: "auto",background: "#000000",color:"#00FFFF",borderStyle:"none",fontSize: "20px" }}
+            as="select"
+            id="type"
+            custom
+            value={topic}
+            onChange={({ target }) => {
+              setTopic(target.value);
+            }}
+          >
+            {topics.map((item, index) => {
+              return (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              );
+            })}
+          </Form.Control>
+        </NavItem>
 
         <NavItem className="ml-auto">
           <Button
@@ -222,14 +242,12 @@ const MyActivities = ({ callBack, user }) => {
       {showMode === 2 && <MonthsGraph df={df} _years={years} />}
       {showMode === 4 && <MonthsSummaryGraph df={df} _years={years} />}
 
-      {/*{showMode !== 3 && */}
-
       {showMode === 3 && (
         <DataForm
           mode={mode}
           data={myDataToShow}
           header={header}
-          func={handleForm}          
+          func={handleForm}
         />
       )}
 
@@ -238,7 +256,6 @@ const MyActivities = ({ callBack, user }) => {
         show={showToast}
         close={() => {
           setShowToast(false);
-          action();
         }}
         params={message}
       ></ToastMsg>

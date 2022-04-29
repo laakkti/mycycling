@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+//import React from "react";
 import { Route, Navigate, Link, Routes, useLocation } from "react-router-dom";
 import { Navbar, NavItem, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,14 +7,26 @@ import { HouseDoor } from "react-bootstrap-icons";
 
 import Homepage from "../routes/Homepage";
 import MyActivities from "../routes/MyActivities";
+import OnProgressModal from "../components/OnProgressModal";
 
-const Navigation = ({ user, admin, callBack }) => {
+const Navigation = ({ user, admin, callBack,progress }) => {
+  
+  const [progressShow, setProgressShow] = useState(false);
+
   let location = useLocation();
-
   let path = location.pathname;
+
+
+  
+  useEffect(() => {
+  
+    setProgressShow(progress);
+  }, [progress]);
+  
 
   return (
     <>
+      <OnProgressModal show={progressShow} message={"Updating db..."} />
       <Navbar style={{ background: "#091834" }} variant="light">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Link to="/" className="mr-auto">

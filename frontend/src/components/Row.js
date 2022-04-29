@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
-import { Pencil, Trash, XCircleFill, Search } from "react-bootstrap-icons";
+import { Pencil, Trash, Search } from "react-bootstrap-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -98,7 +98,7 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
   } else {
     console.log("MODE= " + mode);
 
-    // parametri turha kun/jos köytetään tilamuuttujaa
+    // parametri turha kun/jos käytetään tilamuuttujaa
     const handleSearch = (event, _id) => {
       if (startDate === "" || endDate === "") {
         return;
@@ -155,8 +155,7 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
             >
               {typeOptions.map((item, ind) => {
                 return (
-                  <option key={ind} value={item}>
-                    {" "}
+                  <option key={ind} value={item}>                    
                     {item}
                   </option>
                 );
@@ -167,7 +166,7 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
           <td>
             <Button
               type="submit"
-              className="float-right ml-5 btn btn-success"
+              className="float-right btn btn-success"
               id={id}
               onClick={(e) => {
                 handleSearch(e, e.target.id);

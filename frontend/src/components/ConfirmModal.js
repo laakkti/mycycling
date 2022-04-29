@@ -14,8 +14,7 @@ const ConfirmModal = ({ show, onHide, updateDb }) => {
       show={show}
       onHide={onHide}
       size="sm"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
+      aria-labelledby="contained-modal-title-vcenter"  
       backdrop="static"
     >
       <Modal.Header closeButton>

@@ -90,7 +90,7 @@ const getStravaData = async (access, perPage) => {
 const saveToMongo = async (allActivities) => {
   try {
     await Ride.collection.drop();
-  } catch (error) {
+  } catch (error) { 
     console.error("error_message: " + error.message);
 
     if (error.response) {
@@ -104,7 +104,7 @@ const saveToMongo = async (allActivities) => {
     }
   }
 
-  // ehkei tarvita proeptyjen nimiä vaan kuten user-tapauksessakin arvot riittpp
+  // ehkei tarvita proeptyjen nimiä vaan kuten user-tapauksessakin arvot riittää
   for (let i = 0; i < allActivities.length; i++) {
     const ride = new Ride({
       ride_id: allActivities[i].id,
@@ -168,11 +168,17 @@ const getStravaActivities = async (request, response) => {
     socket.emit("onProgress", true);
 
     // testi viive socketia varten
-    //setTimeout(() => { socket.emit("onProgress", false); }, 10000);
-    const data = await getStravaData(token, perPage);
-    socket.emit("onProgress", false);
-
-    response.json(data.length);
+    let test = true;
+    if (test === true) {
+      setTimeout(() => {
+        socket.emit("onProgress", false);
+      }, 5000);
+      response.json(0);
+    } else {
+      const data = await getStravaData(token, perPage);
+      socket.emit("onProgress", false);
+      response.json(data.length);
+    }
   } catch (exception) {
     console.log("getStravaActivities: " + exception.message);
   }
