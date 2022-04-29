@@ -4,7 +4,7 @@ import { Pencil, Trash, Search } from "react-bootstrap-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const Row = ({ mode, item, func,_selectedIndex }) => {
+const Row = ({ mode, item, func, _selectedIndex }) => {
   const [typeOptions] = useState([
     "Moving time",
     "Distance",
@@ -16,17 +16,13 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
   const [endDate, setEndDate] = useState(new Date());
   const [type, setType] = useState(typeOptions[0]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  
 
   useEffect(() => {
-    
-    
-    if(_selectedIndex!==null && mode!==0){
+    if (_selectedIndex !== null && mode !== 0) {
       setSelectedIndex(_selectedIndex);
-    }else{
+    } else {
       setSelectedIndex(0);
     }
-
   }, [_selectedIndex, mode]);
 
   const handleRow = (mode, id) => {
@@ -34,8 +30,6 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
   };
 
   if (mode === 2) {
-    
-    
     const getFormmatedDate = (dateString) => {
       const date = new Date(dateString);
       let month = (date.getMonth() + 1).toString();
@@ -62,8 +56,8 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
     return (
       <tbody>
         <tr>
-        {values.map((item, ind) => {
-            return ind === (selectedIndex+1) ? (
+          {values.map((item, ind) => {
+            return ind === selectedIndex + 1 ? (
               <td key={ind} style={style}>
                 {item}
               </td>
@@ -72,7 +66,7 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
             );
           })}
           <td style={{ textAlign: "right" }}>
-            <Button
+            {/*<Button
               className="btn btn-success btn-sm"
               id={item._id}
               onClick={(e) => {
@@ -90,15 +84,12 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
               }}
             >
               <Trash id={item._id}></Trash>
-            </Button>
+            </Button>*/}
           </td>
         </tr>
       </tbody>
     );
   } else {
-    console.log("MODE= " + mode);
-
-    // parametri turha kun/jos käytetään tilamuuttujaa
     const handleSearch = (event, _id) => {
       if (startDate === "" || endDate === "") {
         return;
@@ -111,10 +102,8 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
         };
 
         if (mode === 0) {
-
-          func(5, data,selectedIndex);
+          func(5, data, selectedIndex);
         } else {
-          //func(6, data);
         }
       }
     };
@@ -155,7 +144,7 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
             >
               {typeOptions.map((item, ind) => {
                 return (
-                  <option key={ind} value={item}>                    
+                  <option key={ind} value={item}>
                     {item}
                   </option>
                 );
@@ -175,11 +164,7 @@ const Row = ({ mode, item, func,_selectedIndex }) => {
               <Search id={id}></Search>
             </Button>
           </td>
-          <td>
-            {/*<Button className="btn btn-secondary" id={item._id} onClick={(e) => { handleRow(2, e.target.id) }}>
-              <XCircleFill id={item._id}></XCircleFill>
-            </Button>*/}
-          </td>
+          <td></td>
         </tr>
       </tbody>
     );
