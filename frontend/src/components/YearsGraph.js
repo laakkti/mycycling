@@ -30,7 +30,6 @@ const YearsGraph = ({ df, _years }) => {
     setVal(_val);
   }, []);
 
-  // _val, _years
 
   const gDf = new DataFrame({ ride: val }, { index: years });
   let layout;
@@ -92,8 +91,8 @@ const YearsGraph = ({ df, _years }) => {
     <div>
       <div id="plot_div" />
       <Form.Control
-        className="float-right mr-5 btn btn-success"
-        style={{ width: "auto" }}
+        className="float-right mr-5 btn"
+        style={{ width: "auto"}}
         as="select"
         id="type"
         custom

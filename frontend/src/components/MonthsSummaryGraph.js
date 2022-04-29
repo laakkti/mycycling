@@ -123,7 +123,7 @@ const MonthsSummaryGraph = ({ df, _years }) => {
     <div>
       <div id="plot_div" />
       <Form.Control
-        className="float-right mr-5 btn btn-info"
+        className="float-right mr-5 btn"
         style={{ width: "auto" }}
         as="select"
         id="type"

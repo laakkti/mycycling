@@ -105,7 +105,7 @@ const MonthsGraph = ({ df, _years }) => {
     <div>
       <div id="plot_div" />
       <Form.Control
-        className="float-right mr-5 btn btn-info"
+        className="float-right mr-5 btn"
         style={{ width: "auto" }}
         as="select"
         id="type"
@@ -125,7 +125,7 @@ const MonthsGraph = ({ df, _years }) => {
       </Form.Control>
 
       <Form.Control
-        className="float-right mr-1 btn btn-info"
+        className="float-right mr-1 btn"
         style={{ width: "auto" }}
         as="select"
         id="type"

@@ -3,23 +3,23 @@ import Row from "./Row";
 import { Table, Form } from "react-bootstrap";
 import "./css/form.css";
 
-const DataForm = ({ mode, data, header, func}) => {
-
-  //setSelectedIndex={setSelectedIndex}
+const DataForm = ({ mode, data, header, func }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-
- const thisFunc=(mode,data,selectedIndex)=>{
-   
-      func(mode,data);
-      setSelectedIndex(selectedIndex);
- } 
+  const thisFunc = (mode, data, selectedIndex) => {
+    func(mode, data);
+    setSelectedIndex(selectedIndex);
+  };
 
   const HeaderRow = ({ header }) => {
     return (
       <tbody>
         <tr>
           {header.map((item, ind) => {
-            return <td key={ind} style={{background:"#091834",color:"#79abff"}}>{item}</td>;
+            return (
+              <td key={ind} style={{ background: "#091834", color: "#79abff" }}>
+                {item}
+              </td>
+            );
           })}
         </tr>
       </tbody>
@@ -39,7 +39,13 @@ const DataForm = ({ mode, data, header, func}) => {
         {data.length > 0 &&
           data.map((item) => {
             return (
-              <Row key={item.ride_id} mode={mode} item={item} func={thisFunc} _selectedIndex={selectedIndex} />
+              <Row
+                key={item.ride_id}
+                mode={mode}
+                item={item}
+                func={thisFunc}
+                _selectedIndex={selectedIndex}
+              />
             );
           })}
       </Table>

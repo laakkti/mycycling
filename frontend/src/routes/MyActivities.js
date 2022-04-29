@@ -187,7 +187,7 @@ const MyActivities = ({ callBack, user }) => {
         </NavItem>
         <NavItem className="ml-2">
           <Button
-            variant="outline-warning"
+            variant="outline-success"
             onClick={() => {
               setShowMode(2);
             }}
