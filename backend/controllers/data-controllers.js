@@ -104,7 +104,7 @@ const saveToMongo = async (allActivities) => {
     }
   }
 
-  // ehkei tarvita proeptyjen nimiä vaan kuten user-tapauksessakin arvot riittää
+  // ehkei tarvita propertyjen nimiä vaan kuten user-tapauksessakin arvot riittää
   for (let i = 0; i < allActivities.length; i++) {
     const ride = new Ride({
       ride_id: allActivities[i].id,

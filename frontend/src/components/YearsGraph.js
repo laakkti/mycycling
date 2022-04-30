@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { DataFrame, toDateTime } from "danfojs";
+import { toDateTime } from "danfojs";
 import { Form } from "react-bootstrap";
+import Plot from "react-plotly.js";
 
 const YearsGraph = ({ df, _years }) => {
   const [mode, setMode] = useState("bar");
@@ -30,69 +31,41 @@ const YearsGraph = ({ df, _years }) => {
     setVal(_val);
   }, []);
 
-
-  const gDf = new DataFrame({ ride: val }, { index: years });
-  let layout;
-  let config;
-
-  if (mode === "bar") {
-    layout = {
-      width: 1000,
-      plot_bgcolor: "#133863",
-      paper_bgcolor: "#133863",
-      yaxis: {
-        title: "km",
-        color: "#00FF00",
-      },
-      xaxis: {
-        title: "Year",
-        color: "#00FF00",
-      },
-    };
-
-    config = {
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").bar({ layout, config });
-  } else {
-    layout = {
-      title: {
-        text: "",
-        x: 0,
-      },
-      width: 1000,
-      plot_bgcolor: "#133863",
-      paper_bgcolor: "#133863",
-
-      yaxis: {
-        title: "km",
-        color: "#00FF00",
-      },
-      xaxis: {
-        title: "Year",
-        color: "#00FF00",
-      },
-    };
-
-    config = {
-      columns: ["ride"], //columns to plot
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").line({ layout, config });
-  }
-
   const modes = ["bar", "line"];
+  let data = [{ type: mode, x: years, y: _val }];
 
   return (
     <div>
       <div id="plot_div" />
+      <Plot
+        data={data}
+        layout={{
+          plot_bgcolor: "#133863",
+          paper_bgcolor: "#133863",
+          xaxis: {
+            title: "Year",
+            showline: true,
+            zeroline: false,
+            color: "#00FFFF",
+          },
+          yaxis: {
+            title: "Km",
+            showline: false,
+            zeroline: false,
+            color: "#00FFFF",
+          },
+          legend: {
+            font: { family: "Arial", size: 12, color: "#14a2b8" },
+          },
+        }}
+        config={{ displayModeBar: false }}
+        useResizeHandler={true}
+        style={{ width: "90%", height: "90%" }}
+      />
+
       <Form.Control
         className="float-right mr-5 btn"
-        style={{ width: "auto"}}
+        style={{ width: "auto" }}
         as="select"
         id="type"
         custom

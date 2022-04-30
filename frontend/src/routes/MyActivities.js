@@ -251,7 +251,7 @@ const MyActivities = ({ callBack, user }) => {
         />
       )}
 
-      <div id="plot_div" style={{ display: "none" }} />
+      {/*<div id="plot_div" style={{ display: "none" }} />*/}
       <ToastMsg
         show={showToast}
         close={() => {

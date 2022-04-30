@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { DataFrame, toDateTime } from "danfojs";
+import { toDateTime } from "danfojs";
 import { Form } from "react-bootstrap";
+import Plot from "react-plotly.js";
 
 const MonthsSummaryGraph = ({ df, _years }) => {
   const [mode, setMode] = useState("bar");
@@ -17,10 +18,8 @@ const MonthsSummaryGraph = ({ df, _years }) => {
     setYear(_years[0]);    
   }, []);*/
 
-  let summary = [];
-  let items = {};
+  let items = []; //{};
 
-  //for (let i = 0; i < _years.length; i++) {
   for (let i = 0; i < _years.length; i++) {
     let sub_df = df.loc({
       columns: ["distance", "start_date"],
@@ -44,84 +43,51 @@ const MonthsSummaryGraph = ({ df, _years }) => {
 
       _val.push(sum);
     }
-    //summary.push(_val);
-    items[_years[i]] = _val;
+
+    items[i] = _val;
   }
 
   useEffect(() => {
     setYears(_years);
-    //setVal(_val);
   }, []);
 
-  if (mode === "line") {
-    //const gDf = new DataFrame({ ride: _val }, { index: months });
-    const gDf = new DataFrame(items, { index: months });
-
-    const layout = {
-      title: {
-        text: "",
-        x: 0,
-      },
-      legend: {
-        bgcolor: "133863",
-        font: { family: "Arial", size: 12, color: "#14a2b8" },
-      },
-      width: 1000,
-      yaxis: {
-        title: "km",
-        color: "#14a2b8",
-      },
-      xaxis: {
-        title: "Month",
-        color: "#14a2b8",
-      },
-      plot_bgcolor: "#133863",
-      paper_bgcolor: "#133863",
-    };
-
-    const config = {
-      //columns: ["ride"], //columns to plot
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").line({ layout, config });
-  } else {
-    //const gDf = new DataFrame({ ride: _val }, { index: months });
-    const gDf = new DataFrame(items, { index: months });
-
-    const layout = {
-      width: 1000,
-      plot_bgcolor: "#133863",
-      paper_bgcolor: "#133863",
-
-      legend: {
-        bgcolor: "133863",
-        font: { family: "Arial", size: 12, color: "#14a2b8" },
-      },
-
-      yaxis: {
-        title: "km",
-        color: "#FFA500",
-      },
-      xaxis: {
-        title: "Month",
-        color: "#FFA500",
-      },
-    };
-
-    const config = {
-      displayModeBar: false,
-      displaylogo: false,
-    };
-
-    gDf.plot("plot_div").bar({ layout, config });
-  }
   const modes = ["bar", "line"];
 
+  let data = [];
+
+  for (let i = 0; i < years.length; i++) {
+    data.push({ type: mode, name: years[i], x: months, y: items[i] });
+  }
+
+  //FFA500 oranssi
   return (
     <div>
-      <div id="plot_div" />
+      <Plot
+        data={data}
+        layout={{
+          plot_bgcolor: "#133863",
+          paper_bgcolor: "#133863",
+          xaxis: {
+            title: "Month",
+            showline: true,
+            zeroline: false,
+            color: "#00FFFF",
+          },
+          yaxis: {
+            title: "Km",
+            showline: false,
+            zeroline: false,
+            color: "#00FFFF",
+          },
+          legend: {
+            font: { family: "Arial", size: 12, color: "#14a2b8" },
+          },
+        }}
+        config={{ displayModeBar: false }}
+        useResizeHandler={true}
+        style={{ width: "90%", height: "90%" }}
+      />
+
       <Form.Control
         className="float-right mr-5 btn"
         style={{ width: "auto" }}
